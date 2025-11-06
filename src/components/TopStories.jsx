@@ -1,85 +1,267 @@
-import React from "react";
-import { Card, CardContent, Typography, Divider, Box } from "@mui/material";
+import { useState, useEffect } from "react";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, Pagination, Navigation } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/pagination";
+import "swiper/css/navigation";
+
+import newsImg1 from "../assets/AI.png";
+import newsImg2 from "../assets/climatechange.png";
+import newsImg3 from "../assets/economy.png";
+import newsImg4 from "../assets/indianworldcup.png";
+
+const stories = [
+  {
+    title: "AI Revolutionizes Healthcare Diagnostics",
+    desc: "New algorithms are cutting detection times for rare diseases by over 60%.",
+    img: newsImg1,
+    category: "Technology",
+  },
+  {
+    title: "Stock Markets See Record Highs",
+    desc: "Investors celebrate as tech and energy stocks fuel global market optimism.",
+    img: newsImg2,
+    category: "Economy",
+  },
+  {
+    title: "India to Host Global Climate Summit 2025",
+    desc: "World leaders to gather in New Delhi to address rising temperature targets.",
+    img: newsImg3,
+    category: "World",
+  },
+  {
+    title: "Space Tourism Gets a Boost",
+    desc: "Private companies announce new orbital missions open to civilian travelers.",
+    img: newsImg4,
+    category: "Technology",
+  },
+];
 
 export default function TopStories() {
-  const stories = [
-    {
-      title: "AI Revolutionizes Healthcare Diagnostics",
-      desc: "New algorithms are cutting detection times for rare diseases by over 60%.",
-    },
-    {
-      title: "Stock Markets See Record Highs",
-      desc: "Investors celebrate as tech and energy stocks fuel global market optimism.",
-    },
-    {
-      title: "India to Host Global Climate Summit 2025",
-      desc: "World leaders to gather in New Delhi to address rising temperature targets.",
-    },
-    {
-      title: "Space Tourism Gets a Boost",
-      desc: "Private companies announce new orbital missions open to civilian travelers.",
-    },
-  ];
+  const [swiper, setSwiper] = useState(null);
 
   return (
-    <Card
-      sx={{
-        background: "#FFFADC",
-        borderRadius: 2,
-        boxShadow: 4,
-        p: 2,
-        mt: 2,
-        maxHeight: "400px",
-        mb:3,
-        overflowY: "auto",
-      }}
-    >
+    <Box sx={{ mb: 3 }}>
+      {/* Header */}
       <Typography
         variant="h6"
-        color="primary"
         sx={{
-          fontWeight: 600,
-          mb: 2,
-          textAlign: "center",
-          letterSpacing: 0.5,
+          fontWeight: 900,
+          fontSize: "0.85rem",
+          color: "#1a1a1a",
+          textTransform: "uppercase",
+          letterSpacing: "1px",
+          fontFamily: "'Georgia', 'Garamond', serif",
+          mb: 1,
+          pb: 0.5,
+          borderBottom: "2px solid #dc2626",
         }}
       >
         Top Stories
       </Typography>
 
-      <Divider sx={{ mb: 2 }} />
-
-      {stories.map((story, index) => (
-        <Box
-          key={index}
-          sx={{
-            mb: 2.5,
-            p: 1,
-            pl: 2,
-            borderLeft: "3px solid #ff9800",
-            transition: "background 0.3s",
-            "&:hover": {
-              background: "#fff7ed",
-            },
+      {/* Swiper Carousel */}
+      <Box
+        sx={{
+          background: "#ffffff",
+          border: "1px solid #e8e8e8",
+          borderRadius: "0px",
+          overflow: "hidden",
+          position: "relative",
+        }}
+      >
+        <Swiper
+          onSwiper={setSwiper}
+          modules={[Autoplay, Pagination, Navigation]}
+          spaceBetween={0}
+          slidesPerView={1}
+          autoplay={{
+            delay: 4000,
+            disableOnInteraction: false,
+          }}
+          pagination={{
+            clickable: true,
+            bulletClass: "swiper-pagination-bullet",
+            bulletActiveClass: "swiper-pagination-bullet-active",
+          }}
+          navigation={{
+            prevEl: ".swiper-button-prev",
+            nextEl: ".swiper-button-next",
+          }}
+          loop={true}
+          style={{
+            "--swiper-pagination-color": "#dc2626",
+            "--swiper-pagination-bullet-inactive-color": "#999999",
+            "--swiper-pagination-bullet-inactive-opacity": "0.5",
+            "--swiper-navigation-color": "#dc2626",
+            "--swiper-navigation-size": "20px",
           }}
         >
-          <Typography
-            variant="subtitle1"
-            sx={{ fontWeight: 600, color: "#333" }}
-          >
-            {story.title}
-          </Typography>
-          <Typography
-            variant="body2"
-            sx={{ color: "#555", fontSize: 13, mt: 0.5 }}
-          >
-            {story.desc}
-          </Typography>
-          {index < stories.length - 1 && (
-            <Divider sx={{ mt: 1.5, opacity: 0.3 }} />
-          )}
-        </Box>
-      ))}
-    </Card>
+          {stories.map((story, index) => (
+            <SwiperSlide key={index}>
+              <Box
+                sx={{
+                  cursor: "pointer",
+                  transition: "all 0.3s ease",
+                  "&:hover": {
+                    "& .story-image": {
+                      transform: "scale(1.05)",
+                    },
+                  },
+                }}
+              >
+                {/* Image */}
+                <Box
+                  sx={{
+                    width: "100%",
+                    height: "180px",
+                    overflow: "hidden",
+                    borderBottom: "2px solid #e8e8e8",
+                  }}
+                >
+                  <Box
+                    className="story-image"
+                    sx={{
+                      width: "100%",
+                      height: "100%",
+                      backgroundImage: `url(${story.img})`,
+                      backgroundSize: "cover",
+                      backgroundPosition: "center",
+                      transition: "transform 0.5s ease",
+                    }}
+                  />
+                </Box>
+
+                {/* Content */}
+                <Box sx={{ p: 1.5 }}>
+                  {/* Category Badge */}
+                  <Box
+                    component="span"
+                    sx={{
+                      display: "inline-block",
+                      background: "#dc2626",
+                      color: "#ffffff",
+                      px: 1,
+                      py: 0.3,
+                      fontSize: "0.65rem",
+                      fontWeight: 900,
+                      textTransform: "uppercase",
+                      letterSpacing: "0.5px",
+                      fontFamily: "'Georgia', 'Garamond', serif",
+                      mb: 1,
+                    }}
+                  >
+                    {story.category}
+                  </Box>
+
+                  {/* Title */}
+                  <Typography
+                    sx={{
+                      fontWeight: 800,
+                      fontSize: "0.9rem",
+                      color: "#1a1a1a",
+                      lineHeight: 1.3,
+                      mb: 0.8,
+                      fontFamily: "'Georgia', 'Garamond', serif",
+                    }}
+                  >
+                    {story.title}
+                  </Typography>
+
+                  {/* Description */}
+                  <Typography
+                    sx={{
+                      fontSize: "0.75rem",
+                      color: "#666666",
+                      lineHeight: 1.4,
+                      fontFamily: "'Georgia', 'Garamond', serif",
+                    }}
+                  >
+                    {story.desc}
+                  </Typography>
+                </Box>
+              </Box>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+
+        {/* Custom Navigation Buttons */}
+        <Box
+          className="swiper-button-prev"
+          sx={{
+            position: "absolute",
+            left: "10px",
+            top: "40%",
+            zIndex: 10,
+            cursor: "pointer",
+            background: 0,
+            width: "30px",
+            height: "30px",
+            borderRadius: "50%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
+            transition: "all 0.3s ease",
+            "&:hover": {
+              background: "#dc2626",
+              color: "#ffffff",
+            },
+            "&.swiper-button-disabled": {
+              opacity: 0.3,
+              cursor: "default",
+            },
+          }}
+        />
+        <Box
+          className="swiper-button-next"
+          sx={{
+            position: "absolute",
+            right: "10px",
+            top: "40%",
+            zIndex: 10,
+            cursor: "pointer",
+            background: 0,
+            width: "30px",
+            height: "30px",
+            borderRadius: "50%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
+            transition: "all 0.3s ease",
+            "&:hover": {
+              background: "#dc2626",
+              color: "#ffffff",
+            },
+            "&.swiper-button-disabled": {
+              opacity: 0.3,
+              cursor: "default",
+            },
+          }}
+        />
+
+        {/* Pagination Dots */}
+        <Box
+          sx={{
+            ".swiper-pagination": {
+              bottom: "8px !important",
+            },
+            ".swiper-pagination-bullet": {
+              width: "8px",
+              height: "8px",
+              background: "#999999",
+              opacity: 0.5,
+            },
+            ".swiper-pagination-bullet-active": {
+              background: "#dc2626",
+              opacity: 1,
+            },
+          }}
+        />
+      </Box>
+    </Box>
   );
 }

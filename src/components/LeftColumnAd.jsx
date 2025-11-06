@@ -1,33 +1,38 @@
-import React from "react";
-import { Card, Typography } from "@mui/material";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 
-export default function LeftColumnAd({ height = 180 }) {
+export default function LeftColumnAd() {
   return (
-    <Card
+    <Box
       sx={{
-        width: "100%",
-        height: height,
+        mb: 3,
+        background: "#ffffff",
+        minHeight: 200,
+        border: "1px solid #e8e8e8",
+        borderRadius: "0px",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        borderRadius: 2,
-        boxShadow: 3,
-        mt:-1.5,
-        backgroundColor: "#fff",
-        border: "1px solid #e0e0e0",
+        transition: "all 0.3s ease",
+        cursor: "pointer",
+        "&:hover": {
+          borderColor: "#dc2626",
+        },
       }}
     >
       <Typography
-        variant="subtitle1"
+        variant="h6"
         sx={{
-          color: "#757575",
-          fontWeight: 600,
-          letterSpacing: 1,
+          color: "#999999",
+          fontSize: { xs: 13, md: 15 },
+          letterSpacing: 3,
+          fontWeight: 700,
           textTransform: "uppercase",
+          fontFamily: "'Georgia', 'Garamond', serif",
         }}
       >
         Advertisement
       </Typography>
-    </Card>
+    </Box>
   );
 }

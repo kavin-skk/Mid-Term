@@ -1,4 +1,5 @@
-import { Card, CardContent, Typography, Divider, Box } from "@mui/material";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 
 export default function LatestTimeline() {
@@ -21,67 +22,127 @@ export default function LatestTimeline() {
   ];
 
   return (
-    <Card
-      sx={{
-        background: "#FFFADC",
-        borderRadius: 2,
-        boxShadow: 4,
-        p: 2,
-        maxHeight: "600px",
-        overflowY: "auto",
-      }}
-    >
-      <Typography
-        variant="h6"
-        color="primary"
-        sx={{
-          fontWeight: 600,
-          mb: 2,
-          textAlign: "center",
-          letterSpacing: 0.5,
-        }}
-      >
-        Latest Timeline
-      </Typography>
-
-      <Divider sx={{ mb: 2 }} />
-
-      {timelineData.map((item, index) => (
-        <Box
-          key={index}
+    <Box sx={{ mb: 3 }}>
+      {/* Section Header */}
+      <Box sx={{ mb: 1.5 }}>
+        <Typography
+          variant="h6"
           sx={{
-            mb: 2.5,
-            p: 1,
-            borderLeft: "3px solid #d26319ff",
-            pl: 2,
+            fontWeight: 900,
+            fontSize: "0.95rem",
+            color: "#1a1a1a",
+            textTransform: "uppercase",
+            letterSpacing: "1.5px",
+            fontFamily: "'Georgia', 'Garamond', serif",
+            mb: 0.8,
           }}
         >
-          <Box sx={{ display: "flex", alignItems: "center", mb: 0.5 }}>
-            <AccessTimeIcon fontSize="small" sx={{ mr: 1, color: "#757575" }} />
-            <Typography
-              variant="caption"
-              sx={{ color: "#757575", fontWeight: 500 }}
+          Latest Timeline
+        </Typography>
+        <Box
+          sx={{
+            width: "50px",
+            height: "3px",
+            background: "#dc2626",
+            borderRadius: "2px",
+          }}
+        />
+      </Box>
+
+      {/* Timeline Container */}
+      <Box
+        sx={{
+          background: "#ffffff",
+          border: "1px solid #e8e8e8",
+          borderRadius: "0px",
+          p: 2,
+          maxHeight: "500px",
+          overflowY: "auto",
+        }}
+      >
+        {timelineData.map((item, index) => (
+          <Box
+            key={index}
+            sx={{
+              mb: index < timelineData.length - 1 ? 2.5 : 0,
+              pl: 2,
+              borderLeft: "3px solid #dc2626",
+              position: "relative",
+              transition: "all 0.3s ease",
+              cursor: "pointer",
+              "&:hover": {
+                borderLeftColor: "#991b1b",
+                pl: 2.3,
+              },
+            }}
+          >
+            {/* Time Badge */}
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                mb: 0.8,
+                gap: 0.5,
+              }}
             >
-              {item.time}
+              <AccessTimeIcon
+                sx={{
+                  fontSize: "0.9rem",
+                  color: "#dc2626",
+                }}
+              />
+              <Typography
+                sx={{
+                  fontSize: "0.75rem",
+                  fontWeight: 700,
+                  color: "#dc2626",
+                  fontFamily: "'Georgia', 'Garamond', serif",
+                }}
+              >
+                {item.time}
+              </Typography>
+            </Box>
+
+            {/* Title */}
+            <Typography
+              sx={{
+                fontWeight: 800,
+                fontSize: "0.85rem",
+                color: "#1a1a1a",
+                mb: 0.5,
+                lineHeight: 1.3,
+                fontFamily: "'Georgia', 'Garamond', serif",
+              }}
+            >
+              {item.title}
             </Typography>
+
+            {/* Description */}
+            <Typography
+              sx={{
+                fontSize: "0.75rem",
+                color: "#666666",
+                lineHeight: 1.5,
+                fontFamily: "'Georgia', 'Garamond', serif",
+              }}
+            >
+              {item.desc}
+            </Typography>
+
+            {/* Separator Line */}
+            {index < timelineData.length - 1 && (
+              <Box
+                sx={{
+                  height: "1px",
+                  background: "#e8e8e8",
+                  mt: 2,
+                  ml: -2,
+                }}
+              />
+            )}
           </Box>
-          <Typography
-            variant="subtitle1"
-            sx={{ fontWeight: 600, color: "#333" }}
-          >
-            {item.title}
-          </Typography>
-          <Typography
-            variant="body2"
-            sx={{ color: "#555", fontSize: 13, mt: 0.5 }}
-          >
-            {item.desc}
-          </Typography>
-          {index < timelineData.length - 1 && (
-            <Divider sx={{ mt: 1.5, opacity: 0.3 }} />
-          )}
-        </Box>
-      ))}
-    </Card>
+        ))}
+      </Box>
+    </Box>
   );
 }

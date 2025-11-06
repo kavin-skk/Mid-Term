@@ -1,36 +1,47 @@
-import React from "react";
-import { Box, Card, CardMedia, CardContent, Typography } from "@mui/material";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import CategoryBadge from "./CategoryBadge";
+import TimeStamp from "./TimeStamp";
+import ViewCount from "./ViewCount";
+import ReadMoreButton from "./ReadMoreButton";
 
-// Import 4 images (update paths/names as needed)
 import newsImg1 from "../assets/climatechange.png";
-import newsImg2 from "../assets/climatechange.png";
-import newsImg3 from "../assets/climatechange.png";
-import newsImg4 from "../assets/climatechange.png";
+import newsImg2 from "../assets/economy.png";
+import newsImg3 from "../assets/AI.png";
+import newsImg4 from "../assets/indianworldcup.png";
 
 const exploreBlocks = [
   {
+    category: "World",
     title: "Global Climate Talks Gain Momentum",
     desc: "Nations commit to faster carbon reduction at the latest UN summit.",
     img: newsImg1,
-    bg: "#FFFADC",
+    time: "6 hours ago",
+    views: 45000,
   },
   {
+    category: "Economy",
     title: "Economic Outlook Brightens for Asia",
     desc: "IMF projects strong growth rebound led by India and Southeast Asia.",
     img: newsImg2,
-    bg: "#FFFADC",
+    time: "4 hours ago",
+    views: 38000,
   },
   {
+    category: "Technology",
     title: "Tech Giants Face Fresh Data Privacy Scrutiny",
     desc: "Major tech firms are under review for new privacy regulations worldwide.",
     img: newsImg3,
-    bg: "#FFFADC",
+    time: "8 hours ago",
+    views: 62000,
   },
   {
+    category: "Sports",
     title: "ISRO Prepares for Chandrayaan-4 Mission",
     desc: "Final testing begins as India plans a new lunar surface study.",
     img: newsImg4,
-    bg: "#FFFADC",
+    time: "3 hours ago",
+    views: 91000,
   },
 ];
 
@@ -38,92 +49,158 @@ export default function ExploreMore() {
   return (
     <Box
       sx={{
-        width: "100vw", // ✅ Full width
-        mb:1,
-        position: "relative",
-        left: "50%",
-        right: "50%",
-        marginLeft: "-50vw",
-        marginRight: "-50vw",
-        background: "#FFFADC",
-        py: 5,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
+        width: "100%",
+        background: "#ffffff",
+        py: 4,
+        px: 3,
+        borderTop: "3px solid #dc2626",
+        borderBottom: "1px solid #e8e8e8",
       }}
     >
-      <Typography
-        variant="h5"
-        sx={{
-          fontWeight: 700,
-          color: "#d24419ff",
-          mb: 4,
-          textTransform: "uppercase",
-          letterSpacing: 1,
-        }}
-      >
-        Explore More
-      </Typography>
-
+      {/* Section Header */}
       <Box
         sx={{
+          maxWidth: "1300px",
+          mx: "auto",
+          mb: 3,
+        }}
+      >
+        <Typography
+          variant="h5"
+          sx={{
+            fontWeight: 900,
+            color: "#dc2626",
+            mb: 1,
+            textTransform: "uppercase",
+            letterSpacing: "2px",
+            fontSize: { xs: "1.3rem", md: "1.5rem" },
+            fontFamily: "'Georgia', 'Garamond', serif",
+          }}
+        >
+          Explore More
+        </Typography>
+        <Box
+          sx={{
+            width: "80px",
+            height: "3px",
+            background: "#dc2626",
+          }}
+        />
+      </Box>
+
+      {/* Grid Cards */}
+      <Box
+        sx={{
+          maxWidth: "1300px",
+          mx: "auto",
           display: "grid",
           gridTemplateColumns: {
             xs: "1fr",
             sm: "1fr 1fr",
             md: "1fr 1fr 1fr 1fr",
           },
-          gap: 2,
-          width: "100%",
-          maxWidth: "1300px", // ✅ Matches main content width
-          px: 2,
+          gap: 2.5,
         }}
       >
-        {exploreBlocks.map(({ title, desc, img, bg }, idx) => (
-          <Card
+        {exploreBlocks.map((item, idx) => (
+          <Box
             key={idx}
             sx={{
-              background: bg,
-              borderRadius: 2,
-              boxShadow: 3,
+              background: "#ffffff",
+              border: "1px solid #e8e8e8",
+              borderRadius: "0px",
               overflow: "hidden",
-              height: "100%",
-              transition: "transform 0.28s",
-              "&:hover": {
-                transform: "scale(1.03)",
-                boxShadow: 6,
-              },
+              transition: "all 0.3s ease",
+              cursor: "pointer",
               display: "flex",
               flexDirection: "column",
+              "&:hover": {
+                borderColor: "#dc2626",
+                borderWidth: "2px",
+                transform: "translateY(-4px)",
+                boxShadow: "0 4px 8px rgba(220, 38, 38, 0.15)",
+              },
             }}
           >
-            <CardMedia
-              component="img"
-              image={img}
-              alt={title}
-              height="180"
+            {/* Image */}
+            <Box
               sx={{
-                objectFit: "cover",
                 width: "100%",
+                height: "180px",
+                overflow: "hidden",
+                borderBottom: "2px solid #e8e8e8",
               }}
-            />
-            <CardContent>
-              <Typography
-                variant="h6"
+            >
+              <img
+                src={item.img}
+                alt={item.title}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                }}
+              />
+            </Box>
+
+            {/* Content */}
+            <Box sx={{ p: 2, display: "flex", flexDirection: "column", flex: 1 }}>
+              {/* Category + Time */}
+              <Box
                 sx={{
-                  fontWeight: 600,
-                  color: "#E65100",
-                  fontSize: { xs: 15, md: 18 },
-                  mb: 0.5,
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 1,
+                  mb: 1.5,
+                  flexWrap: "wrap",
                 }}
               >
-                {title}
+                <CategoryBadge category={item.category} />
+                <TimeStamp time={item.time} />
+              </Box>
+
+              {/* Title */}
+              <Typography
+                sx={{
+                  fontWeight: 800,
+                  fontSize: "0.95rem",
+                  color: "#1a1a1a",
+                  mb: 1,
+                  lineHeight: 1.3,
+                  fontFamily: "'Georgia', 'Garamond', serif",
+                  flex: 1,
+                }}
+              >
+                {item.title}
               </Typography>
-              <Typography variant="body2" sx={{ color: "#212121" }}>
-                {desc}
+
+              {/* Description */}
+              <Typography
+                sx={{
+                  fontSize: "0.85rem",
+                  color: "#666666",
+                  lineHeight: 1.5,
+                  fontFamily: "'Georgia', 'Garamond', serif",
+                  mb: 1.5,
+                }}
+              >
+                {item.desc}
               </Typography>
-            </CardContent>
-          </Card>
+
+              {/* Bottom Row: Views + Read More */}
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  pt: 1,
+                  borderTop: "1px solid #e8e8e8",
+                }}
+              >
+                <ViewCount count={item.views} />
+                <ReadMoreButton onClick={() => console.log("Navigate to article")} />
+              </Box>
+            </Box>
+          </Box>
         ))}
       </Box>
     </Box>

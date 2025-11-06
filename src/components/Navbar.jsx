@@ -57,20 +57,24 @@ export default function Navbar() {
     <>
       <AppBar
         position="fixed"
-        elevation={2}
+        elevation={0}
         sx={{
-          backgroundColor: "#FFFADC",
-          color: "#6D2323",
+          backgroundColor: "#ffffff",
+          borderBottom: "3px solid #dc2626",
+          boxShadow: "none",
         }}
       >
-        <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
-          <Stack direction="row" alignItems="center" spacing={1}>
+        <Toolbar sx={{ display: "flex", justifyContent: "space-between", minHeight: 70 }}>
+          <Stack direction="row" alignItems="center" spacing={2}>
             {/* Hamburger Menu */}
             <IconButton
               edge="start"
               aria-label="menu"
               onClick={() => setDrawerOpen(true)}
-              sx={{ color: "#e6aa07ff" }}
+              sx={{ 
+                color: "#1a1a1a",
+                "&:hover": { backgroundColor: "#fef2f2" }
+              }}
             >
               <MenuIcon />
             </IconButton>
@@ -81,63 +85,98 @@ export default function Navbar() {
                 display: { xs: "none", sm: "flex" },
                 alignItems: "center",
                 gap: 1,
-                background: "#fff5cc",
+                background: "#fef2f2",
                 px: 2,
-                py: 0.5,
-                borderRadius: "10px",
+                py: 1,
+                borderRadius: "0px",
+                border: "1px solid #e8e8e8",
                 fontWeight: 600,
-                fontSize: "0.9rem",
-                boxShadow: "inset 0 0 4px rgba(0,0,0,0.1)",
+                fontSize: "0.85rem",
               }}
             >
-              <span style={{ fontSize: "1.1rem" }}>📍</span>
-              <Typography sx={{ fontSize: 13, fontWeight: 700 }}>
+              <span style={{ fontSize: "1rem", color: "#dc2626" }}>📍</span>
+              <Typography 
+                sx={{ 
+                  fontSize: 13, 
+                  fontWeight: 700,
+                  color: "#1a1a1a",
+                  fontFamily: "'Georgia', 'Garamond', serif"
+                }}
+              >
                 {error ? error : location}
               </Typography>
             </Box>
           </Stack>
 
-          {/* Logo/Brand */}
+          {/* Logo/Brand - Professional Newspaper Style */}
           <Typography
             variant="h6"
             sx={{
-              fontWeight: "bold",
+              fontWeight: 900,
               textAlign: "center",
               flexGrow: 1,
-              letterSpacing: 2,
+              letterSpacing: 4,
+              fontFamily: "'Georgia', 'Garamond', serif",
+              fontSize: "1.8rem",
             }}
           >
-            <span style={{
-              background: "#e6aa07ff",
-              color: "#FFFADC",
-              padding: "0 12px",
-              borderRadius: "4px",
-              marginRight: "4px",
-            }}>M</span>
-            <span style={{
-              background: "#e6aa07ff",
-              color: "#FFFADC",
-              padding: "0 12px",
-              borderRadius: "4px",
-              marginRight: "4px",
-            }}>I</span>
-            <span style={{
-              background: "#e6aa07ff",
-              color: "#FFFADC",
-              padding: "0 12px",
-              borderRadius: "4px",
-            }}>D</span>
+            <span
+              style={{
+                background: "#dc2626",
+                color: "#ffffff",
+                padding: "4px 16px",
+                borderRadius: "0px",
+                marginRight: "6px",
+                fontWeight: 900,
+              }}
+            >
+              M
+            </span>
+            <span
+              style={{
+                background: "#dc2626",
+                color: "#ffffff",
+                padding: "4px 16px",
+                borderRadius: "0px",
+                marginRight: "6px",
+                fontWeight: 900,
+              }}
+            >
+              I
+            </span>
+            <span
+              style={{
+                background: "#dc2626",
+                color: "#ffffff",
+                padding: "4px 16px",
+                borderRadius: "0px",
+                fontWeight: 900,
+              }}
+            >
+              D
+            </span>
           </Typography>
 
-          {/* Actions */}
-          <Stack direction="row" spacing={1}>
+          {/* Actions - Professional Red & White */}
+          <Stack direction="row" spacing={1.5}>
             <Button
               variant="contained"
               sx={{
-                backgroundColor: "#e6aa07ff",
-                color: "#FFFADC",
-                fontWeight: "bold",
-                "&:hover": { backgroundColor: "#e6aa07ff" },
+                backgroundColor: "#dc2626",
+                color: "#ffffff",
+                fontWeight: 900,
+                textTransform: "uppercase",
+                letterSpacing: "1px",
+                fontSize: "0.8rem",
+                borderRadius: "0px",
+                px: 3,
+                py: 1,
+                fontFamily: "'Georgia', 'Garamond', serif",
+                "&:hover": { 
+                  backgroundColor: "#991b1b",
+                  transform: "translateY(-1px)",
+                },
+                transition: "all 0.2s ease",
               }}
               onClick={() => navigate("/plans")}
             >
@@ -146,10 +185,24 @@ export default function Navbar() {
             <Button
               variant="outlined"
               sx={{
-                borderColor: "#e6aa07ff",
-                color: "#e6aa07ff",
-                fontWeight: "bold",
-                "&:hover": { borderColor: "#e6aa07ff", color: "#e6aa07ff" },
+                borderColor: "#dc2626",
+                border: "2px solid #dc2626",
+                color: "#dc2626",
+                fontWeight: 900,
+                textTransform: "uppercase",
+                letterSpacing: "1px",
+                fontSize: "0.8rem",
+                borderRadius: "0px",
+                px: 3,
+                py: 1,
+                fontFamily: "'Georgia', 'Garamond', serif",
+                "&:hover": { 
+                  borderColor: "#991b1b",
+                  backgroundColor: "#fef2f2",
+                  color: "#991b1b",
+                  border: "2px solid #991b1b",
+                },
+                transition: "all 0.2s ease",
               }}
               onClick={() => navigate("/signin")}
             >
@@ -157,30 +210,40 @@ export default function Navbar() {
             </Button>
           </Stack>
         </Toolbar>
-        {/* Secondary menu: collapse on small screens */}
+
+        {/* Secondary menu - Professional Categories */}
         <Toolbar
           variant="dense"
           sx={{
             justifyContent: "center",
-            gap: 1,
+            gap: 0,
             overflowX: "auto",
-            background: "#FFFADC",
-            color: "#6D2323",
+            background: "#ffffff",
+            borderTop: "1px solid #e8e8e8",
             display: { xs: "none", sm: "flex" },
-            minHeight: 40,
+            minHeight: 50,
             px: 0,
           }}
         >
-          {menuItems.map((link) => (
+          {menuItems.map((link, index) => (
             <Button
               key={link}
               sx={{
                 color: "#6D2323",
-                fontWeight: "bold",
-                "&:hover": { backgroundColor: "#e6aa07ff", color: "#FFFADC" },
+                fontWeight: 700,
+                fontSize: "0.85rem",
                 textTransform: "none",
-                px: 1.5,
-                minWidth: 80,
+                fontFamily: "'Georgia', 'Garamond', serif",
+                px: 2.5,
+                py: 1.5,
+                minWidth: "auto",
+                borderRadius: "0px",
+                borderRight: index < menuItems.length - 1 ? "1px solid #e8e8e8" : "none",
+                "&:hover": {
+                  backgroundColor: "#dc2626",
+                  color: "#ffffff",
+                },
+                transition: "all 0.2s ease",
               }}
             >
               {link}
@@ -188,38 +251,67 @@ export default function Navbar() {
           ))}
         </Toolbar>
       </AppBar>
-      {/* Drawer for mobile view */}
+
+      {/* Drawer for mobile view - Professional Style */}
       <Drawer
         anchor="left"
         open={drawerOpen}
         onClose={() => setDrawerOpen(false)}
         PaperProps={{
-          sx: { backgroundColor: "#FFFADC", color: "#6D2323", width: 240 },
+          sx: { 
+            backgroundColor: "#ffffff",
+            color: "#1a1a1a",
+            width: 260,
+            borderRight: "3px solid #dc2626",
+          },
         }}
       >
-        <Box sx={{ p: 2 }}>
-          <Typography
-            variant="h6"
+        <Box sx={{ p: 0 }}>
+          {/* Drawer Header */}
+          <Box
             sx={{
-              fontWeight: 700,
-              mb: 2,
-              color: "#e6aa07ff",
+              background: "#dc2626",
+              color: "#ffffff",
+              p: 3,
               textAlign: "center",
+              borderBottom: "1px solid #991b1b",
             }}
           >
-            MENU
-          </Typography>
+            <Typography
+              variant="h6"
+              sx={{
+                fontWeight: 900,
+                letterSpacing: 3,
+                fontFamily: "'Georgia', 'Garamond', serif",
+                fontSize: "1.5rem",
+              }}
+            >
+              MID NEWS
+            </Typography>
+          </Box>
+
+          {/* Menu Items */}
           {menuItems.map((text, idx) => (
             <Button
               key={idx}
               fullWidth
               sx={{
                 justifyContent: "flex-start",
-                color: "#6D2323",
-                fontWeight: "bold",
-                mb: 0.5,
-                "&:hover": { backgroundColor: "#e6aa07ff", color: "#FFFADC" },
+                color: "#1a1a1a",
+                fontWeight: 700,
+                fontSize: "0.95rem",
+                py: 1.8,
+                px: 3,
+                borderRadius: "0px",
+                borderBottom: "1px solid #e8e8e8",
+                fontFamily: "'Georgia', 'Garamond', serif",
                 textTransform: "none",
+                "&:hover": {
+                  backgroundColor: "#dc2626",
+                  color: "#ffffff",
+                  paddingLeft: "32px",
+                },
+                transition: "all 0.2s ease",
               }}
             >
               {text}
@@ -227,7 +319,6 @@ export default function Navbar() {
           ))}
         </Box>
       </Drawer>
-      {/* /*<Box sx={{ height: 110 }} /> */}
     </>
   );
 }

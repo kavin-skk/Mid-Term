@@ -1,12 +1,38 @@
-import Card from '@mui/material/Card';
-import Typography from '@mui/material/Typography';
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 
 export default function SidebarAdBanner() {
   return (
-    <Card sx={{ mb: 3, background: '#fff', minHeight: 100, boxShadow: 3, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <Typography variant="h6" sx={{ color: '#757575', fontSize: { xs: 14, md: 16 }, letterSpacing: 2 }}>
-        ADVERTISEMENT
+    <Box
+      sx={{
+        mb: 3,
+        background: "#ffffff",
+        minHeight: 150,
+        border: "1px solid #e8e8e8",
+        borderRadius: "0px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        transition: "all 0.3s ease",
+        cursor: "pointer",
+        "&:hover": {
+          borderColor: "#dc2626",
+        },
+      }}
+    >
+      <Typography
+        variant="h6"
+        sx={{
+          color: "#999999",
+          fontSize: { xs: 13, md: 15 },
+          letterSpacing: 3,
+          fontWeight: 700,
+          textTransform: "uppercase",
+          fontFamily: "'Georgia', 'Garamond', serif",
+        }}
+      >
+        Advertisement
       </Typography>
-    </Card>
+    </Box>
   );
 }

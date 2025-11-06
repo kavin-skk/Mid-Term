@@ -1,12 +1,12 @@
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
+import Footer from "./components/Footer";
+import Typography from "@mui/material/Typography";
 import Navbar from "./components/Navbar";
 import BreakingNewsSection from "./components/BreakingNewsSection";
-import Top5ViralNews from "./components/Top5ViralNews";
+import LatestHeadlines from "./components/LatestHeadlines";
 import SidebarAdBanner from "./components/SidebarAdBanner";
 import StockWidget from "./components/StockWidget";
-import Card from "@mui/material/Card";
-import Typography from "@mui/material/Typography";
 import LatestTimeline from "./components/LatestTimeline";
 import LiveTicker from "./components/LiveTicker";
 import TrendingNews from "./components/TrendingNews";
@@ -15,11 +15,14 @@ import EditorsPicks from "./components/EditorsPicks";
 import TopStories from "./components/TopStories";
 import LeftColumnAd from "./components/LeftColumnAd";
 import StateUpdates from "./components/StateUpdates";
+import AdBanner from "./components/AdBanner";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import SubscriptionPlans from "./pages/SubscriptionPlans";
 import SubscriptionForm from "./pages/SubscriptionForm";
 import GoogleSignIn from "./components/GoogleSignIn";
-
+import TrendingVideos from "./components/TrendingVideos";
+import OpinionAnalysis from "./components/OpinionAnalysis";
+import QuickRead from "./components/QuickRead";
 
 
 
@@ -27,130 +30,165 @@ function MainPageContent() {
   return (
     <div
       style={{
-        backgroundColor: "#fafafa",
+        backgroundColor: "#f8f8f8",
         minHeight: "100vh",
         overflowX: "hidden",
       }}
     >
+      {/* 1. NAVBAR - Fixed at top */}
       <Navbar />
+
+      {/* 2. LIVE TICKER - Scrolls with page */}
       <LiveTicker />
 
-      <div style={{ marginTop: 150 }}>
-        {/* 🔸 Full-width Top Ad Banner */}
-        <Card
-          sx={{
-            width: "100vw",
-            height: 80,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            boxShadow: 3,
-            borderRadius: 0,
-            color: "#757575",
-            fontWeight: "bold",
-            letterSpacing: 2,
-            backgroundColor: "#fff",
-            borderBottom: "2px solid #e0e0e0",
-            position: "relative",
-            left: "50%",
-            right: "50%",
-            marginLeft: "-50vw",
-            marginRight: "-50vw",
-            zIndex: 1,
-          }}
-        >
-          <Typography variant="h6" sx={{ fontSize: { xs: 13, md: 16 } }}>
-            ADVERTISEMENT
-          </Typography>
-        </Card>
+      {/* 3. ADVERTISEMENT PLACEHOLDER - Space for backend */}
+      <div style={{ marginTop: 170 }}>
+        {/* 🔸 Full-width Top Ad Banner - Professional Style */}
+{/* Advertisement */}
+<AdBanner />
 
-        {/* 🔹 MAIN GRID */}
+        {/* 🔹 MAIN 3-COLUMN LAYOUT: 18% | 64% | 18% */}
+        {/* 🔹 MAIN 3-COLUMN LAYOUT: 18% | 64% | 18% */}
         <main
           style={{
             maxWidth: "1300px",
             margin: "0 auto",
-            marginTop: 16,
-            display: "flex",
-            alignItems: "flex-start",
-            flexDirection: "column",
+            marginTop: 32,
+            paddingBottom: 50,
+            paddingLeft: 12,
+            paddingRight: 12,
           }}
         >
-          <Grid
-            container
-            spacing={3}
-            alignItems="flex-start"
-            sx={{
-              flexWrap: { xs: "wrap", md: "nowrap" },
+          {/* Flexbox Container for precise width control */}
+          <div
+            style={{
+              display: "flex",
+              gap: "24px",
               alignItems: "flex-start",
             }}
           >
-            {/* 🔸 LEFT COLUMN */}
-            <Grid
-              item
-              xs={12}
-              md={3}
-              sx={{
-                minWidth: { md: 220 },
+            {/* 🔸 LEFT COLUMN - Exactly 18% */}
+            <div
+              style={{
+                width: "18%",
+                minWidth: "220px",
                 display: "flex",
                 flexDirection: "column",
-                gap: 2,
+                gap: "24px",
+                borderRight: "2px solid #e8e8e8",
+                paddingRight: "24px",
               }}
             >
-              <Top5ViralNews />
+              <LatestHeadlines />
               <SidebarAdBanner />
               <TrendingNews />
-              <LeftColumnAd height={300} sx={{ mt: -3 }} />
-            </Grid>
-            {/* 🔹 CENTER COLUMN */}
-            <Grid
-              item
-              xs={12}
-              md={6}
-              sx={{
+              <TrendingVideos />
+              <LeftColumnAd />
+            
+            </div>
+
+            {/* 🔹 CENTER COLUMN - Exactly 64% */}
+            <div
+              style={{
+                width: "64%",
+                flex: "1",
                 display: "flex",
-                justifyContent: "center",
                 flexDirection: "column",
-                alignItems: "center",
-                minWidth: { md: 0 },
-                mb: -2.5,
               }}
             >
               <BreakingNewsSection />
-            </Grid>
-            {/* 🔸 RIGHT COLUMN */}
-            <Grid
-              item
-              xs={12}
-              md={3}
-              sx={{
+              <OpinionAnalysis />
+            </div>
+<Box sx={{ height: "40px" }} />
+            {/* 🔸 RIGHT COLUMN - Exactly 18% */}
+            <div
+              style={{
+                width: "18%",
+                minWidth: "220px",
                 display: "flex",
                 flexDirection: "column",
-                gap: 1.5,
-                minWidth: { md: 260 },
-                position: { md: "sticky", xs: "static" },
-                top: { md: 100 },
-                alignSelf: "flex-start",
-                height: "fit-content",
+                gap: "24px",
+                borderLeft: "2px solid #e8e8e8",
+                paddingLeft: "24px",
               }}
             >
               <StockWidget />
               <LatestTimeline />
               <TopStories />
-            </Grid>
-          </Grid>
+              <QuickRead />
+            </div>
+          </div>
         </main>
-        {/* 🌐 Full-width ExploreMore Section */}
-        <Box sx={{ mb: 3 }}>
+
+        {/* 🌐 FULL-WIDTH SECTIONS */}
+
+        {/* ExploreMore Section */}
+        <Box
+          sx={{
+            mb: 4,
+            background: "#ffffff",
+            borderTop: "3px solid #dc2626",
+            borderBottom: "1px solid #e8e8e8",
+            width: "100%",
+            mt: 4,
+          }}
+        >
           <ExploreMore />
         </Box>
-        {/* 🌐 Full-width Editors Picks Section */}
-        <Box sx={{ mb: 3 }}>
+<Box sx={{ height: "40px" }} />
+        {/* Editors Picks Section */}
+        <Box
+          sx={{
+            mb: 4,
+            background: "#ffffff",
+            borderTop: "3px solid #dc2626",
+            borderBottom: "1px solid #e8e8e8",
+            width: "100%",
+          }}
+        >
           <EditorsPicks />
         </Box>
-        {/* 🌐 Full-width State Updates Section */}
-        <Box sx={{ mb: 3 }}>
+
+        {/* State Updates Section */}
+        <Box
+          sx={{
+            mb: 4,
+            background: "#ffffff",
+            borderTop: "3px solid #dc2626",
+            borderBottom: "1px solid #e8e8e8",
+            width: "100%",
+          }}
+        >
           <StateUpdates />
         </Box>
+
+        {/* Footer */}
+        <Box
+          sx={{
+            height: "60px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            borderTop: "3px solid #dc2626",
+            background: "#ffffff",
+            width: "100%",
+          }}
+        >
+          <Typography
+            variant="caption"
+            sx={{
+              color: "#999999",
+              fontWeight: 600,
+              letterSpacing: "1px",
+              textTransform: "uppercase",
+              fontSize: "0.75rem",
+            }}
+          >
+            © 2025 MID News. All Rights Reserved.
+          </Typography>
+         
+        </Box>
+         <Footer />
       </div>
     </div>
   );

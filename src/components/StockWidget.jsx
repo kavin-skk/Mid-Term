@@ -1,68 +1,104 @@
-import Card from '@mui/material/Card';
-import Typography from '@mui/material/Typography';
-import Stack from '@mui/material/Stack';
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import TrendingUpIcon from "@mui/icons-material/TrendingUp";
+import TrendingDownIcon from "@mui/icons-material/TrendingDown";
 
 export default function StockWidget() {
-  const stocks = [
-    { name: 'NIFTY 50', change: -0.64, value: 25597.65, changeValue: -165.70 },
-    { name: 'SENSEX', change: -0.62, value: 83459.15, changeValue: -519.34 },
-    { name: 'Nifty Bank', change: -0.47, value: 57827.05, changeValue: -274.40 }
+  const marketData = [
+    { name: "NIFTY 50", value: "25,597.65", change: "-0.64", isPositive: false },
+    { name: "SENSEX", value: "83,459.15", change: "-0.62", isPositive: false },
+    { name: "GOLD", value: "₹76,450", change: "+0.42", isPositive: true },
   ];
 
   return (
-    <Card
-      sx={{
-        background: '#FFFADC',
-        p: 1,
-        borderRadius: 2,
-        boxShadow: 2,
-        minWidth: 0,
-        maxWidth: 400,
-        mx: 'auto'
-      }}
-    >
+    <Box sx={{ mb: 2 }}>
+      {/* Minimal Header */}
       <Typography
-        variant="subtitle2"
+        variant="h6"
         sx={{
+          fontWeight: 900,
+          fontSize: "0.85rem",
+          color: "#1a1a1a",
+          textTransform: "uppercase",
+          letterSpacing: "1px",
+          fontFamily: "'Georgia', 'Garamond', serif",
           mb: 1,
-          fontSize: '1rem',
-          textAlign: 'center',
-          fontWeight: 600
+          pb: 0.5,
+          borderBottom: "2px solid #dc2626",
         }}
       >
         India Markets
       </Typography>
-      <Stack direction="row" spacing={1} justifyContent="center">
-        {stocks.map((s, idx) => (
-          <Card
-            key={idx}
+
+      {/* Ultra-Compact Market Box */}
+      <Box
+        sx={{
+          background: "#ffffff",
+          border: "1px solid #e8e8e8",
+          borderRadius: "0px",
+        }}
+      >
+        {marketData.map((market, index) => (
+          <Box
+            key={index}
             sx={{
-              minWidth: 100,
-              maxWidth: 130,
-              height: 100,
-              background: '#FFF4F4',
-              borderRadius: 2,
-              boxShadow: 1,
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
               p: 1,
+              borderBottom: index < marketData.length - 1 ? "1px solid #f5f5f5" : "none",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              transition: "background 0.2s ease",
+              "&:hover": { background: "#fafafa" },
             }}
           >
-            <Typography color="red" fontWeight="bold" fontSize="0.95rem">
-              {s.name}
-            </Typography>
-            <Typography color="error" fontSize="0.92rem">
-              {s.change}%
-            </Typography>
-            <Typography fontSize="0.92rem">{s.value}</Typography>
-            <Typography color="error" fontSize="0.92rem">
-              {s.changeValue}
-            </Typography>
-          </Card>
+            {/* Left: Name + Value */}
+            <Box>
+              <Typography
+                sx={{
+                  fontSize: "0.7rem",
+                  fontWeight: 700,
+                  color: "#666666",
+                  lineHeight: 1,
+                  mb: 0.3,
+                  fontFamily: "'Georgia', 'Garamond', serif",
+                }}
+              >
+                {market.name}
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: "0.95rem",
+                  fontWeight: 900,
+                  color: "#1a1a1a",
+                  lineHeight: 1,
+                  fontFamily: "'Georgia', 'Garamond', serif",
+                }}
+              >
+                {market.value}
+              </Typography>
+            </Box>
+
+            {/* Right: Change */}
+            <Box sx={{ display: "flex", alignItems: "center", gap: 0.3 }}>
+              {market.isPositive ? (
+                <TrendingUpIcon sx={{ fontSize: "0.85rem", color: "#16a34a" }} />
+              ) : (
+                <TrendingDownIcon sx={{ fontSize: "0.85rem", color: "#dc2626" }} />
+              )}
+              <Typography
+                sx={{
+                  fontSize: "0.75rem",
+                  fontWeight: 700,
+                  color: market.isPositive ? "#16a34a" : "#dc2626",
+                  fontFamily: "'Georgia', 'Garamond', serif",
+                }}
+              >
+                {market.change}%
+              </Typography>
+            </Box>
+          </Box>
         ))}
-      </Stack>
-    </Card>
+      </Box>
+    </Box>
   );
 }

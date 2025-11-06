@@ -1,72 +1,155 @@
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import Divider from "@mui/material/Divider";
+import Typography from "@mui/material/Typography";
 
-export default function TrendingNews() {
-  const trending = [
-    "Global Markets See Mixed Reaction to Rate Cut",
-    "PM Announces New Green Energy Initiative",
-    "Tech Giants Face Fresh Data Privacy Scrutiny",
-    "Cricket World Cup: India Secures Dominant Win",
-    "Oil Prices Surge Amid Middle East Tensions",
-  ];
+import newsImg1 from "../assets/economy.png";
+import newsImg2 from "../assets/AI.png";
+import newsImg3 from "../assets/climatechange.png";
+import newsImg4 from "../assets/indianworldcup.png";
+import newsImg5 from "../assets/supremecourt.png";
 
+const trendingData = [
+  {
+    title: "Global Markets See Mixed Reaction to Rate Cut",
+    count: "1245",
+    img: newsImg1,
+  },
+  {
+    title: "PM Announces New Green Energy Initiative",
+    count: "892",
+    img: newsImg2,
+  },
+  {
+    title: "Tech Giants Face Fresh Data Privacy Scrutiny",
+    count: "756",
+    img: newsImg3,
+  },
+  {
+    title: "Cricket World Cup: India Secures Dominant Win",
+    count: "623",
+    img: newsImg4,
+  },
+  {
+    title: "Oil Prices Surge Amid Middle East Tensions",
+    count: "541",
+    img: newsImg5,
+  },
+];
+
+export default function TrendingSection() {
   return (
-    <Box
-      sx={{
-        width: "100%",
-        maxWidth: "1300px",
-        mx: "auto",
-        display: "flex",
-        justifyContent: "center",
-        mb: 2,
-      }}
-    >
-      <Card
+    <Box sx={{ mb: 3 }}>
+      {/* Header with Fire */}
+      <Box sx={{ position: "relative", mb: 1.5 }}>
+        <Typography
+          variant="h6"
+          sx={{
+            fontWeight: 900,
+            fontSize: "0.9rem",
+            color: "#1a1a1a",
+            textTransform: "uppercase",
+            letterSpacing: "1.5px",
+            fontFamily: "'Georgia', 'Garamond', serif",
+          }}
+        >
+          Trending
+        </Typography>
+
+        {/* Fire icon */}
+        <Box
+          className="fire-animation"
+          sx={{
+            position: "absolute",
+            top: "-10px",
+            right: "0px",
+            fontSize: "1.5rem",
+          }}
+        >
+          🔥
+        </Box>
+      </Box>
+
+      {/* Trending Items with Images */}
+      <Box
         sx={{
-          width: "100%",
-          maxWidth: "1300px",
-          background: "#FFFADC",
-          borderRadius: 2,
-          boxShadow: 3,
-          overflow: "hidden",
-          borderTop: "3px solid #d32f2f", // Red accent top border
+          background: "#ffffff",
+          border: "1px solid #e8e8e8",
+          borderRadius: "0px",
         }}
       >
-        <CardContent sx={{ px: 3, py: 2 }}>
-          <Typography
-            variant="h6"
+        {trendingData.map((item, index) => (
+          <Box
+            key={index}
             sx={{
-              fontWeight: 700,
-              color: "#d32f2f",
-              mb: 1.5,
-              textTransform: "uppercase",
-              letterSpacing: 1,
+              display: "flex",
+              alignItems: "center",
+              gap: 1.5,
+              p: 1.2,
+              borderBottom:
+                index < trendingData.length - 1 ? "1px solid #f5f5f5" : "none",
+              cursor: "pointer",
+              transition: "all 0.2s ease",
+              "&:hover": {
+                background: "#fafafa",
+              },
             }}
           >
-            Trending Now
-          </Typography>
-          <Divider sx={{ mb: 1 }} />
-          {trending.map((news, index) => (
-            <Typography
-              key={index}
-              variant="body1"
+            {/* Thumbnail Image */}
+            <Box
               sx={{
-                fontSize: { xs: 13, md: 15 },
-                color: "#333",
-                lineHeight: 1.6,
-                mb: index !== trending.length - 1 ? 1 : 0,
-                "&:hover": { color: "#d32f2f", cursor: "pointer" },
-                transition: "color 0.2s ease",
+                width: "50px",
+                height: "50px",
+                flexShrink: 0,
+                borderRadius: "4px",
+                overflow: "hidden",
+                border: "1px solid #e8e8e8",
               }}
             >
-              • {news}
+              <img
+                src={item.img}
+                alt={item.title}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                }}
+              />
+            </Box>
+
+            {/* Text Content */}
+            <Box sx={{ flex: 1, minWidth: 0 }}>
+              <Typography
+                sx={{
+                  fontSize: "0.8rem",
+                  fontWeight: 700,
+                  color: "#1a1a1a",
+                  lineHeight: 1.3,
+                  fontFamily: "'Georgia', 'Garamond', serif",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  display: "-webkit-box",
+                  WebkitLineClamp: 2,
+                  WebkitBoxOrient: "vertical",
+                }}
+              >
+                {item.title}
+              </Typography>
+            </Box>
+
+            {/* View Count */}
+            <Typography
+              sx={{
+                fontSize: "0.85rem",
+                fontWeight: 900,
+                color: "#dc2626",
+                fontFamily: "'Georgia', 'Garamond', serif",
+                flexShrink: 0,
+              }}
+            >
+              {item.count}
             </Typography>
-          ))}
-        </CardContent>
-      </Card>
+          </Box>
+        ))}
+      </Box>
     </Box>
   );
 }

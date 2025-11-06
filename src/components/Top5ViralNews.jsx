@@ -1,14 +1,13 @@
 import { useEffect, useRef, useState } from "react";
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import Typography from '@mui/material/Typography';
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 
 const viralVideos = [
-  { title: 'Viral Clip 1', url: '/videos/clip1.mp4' },
-  { title: 'Viral Clip 2', url: '/videos/clip2.mp4' },
-  { title: 'Viral Clip 3', url: '/videos/clip3.mp4' },
-  { title: 'Viral Clip 4', url: '/videos/clip4.mp4' },
-  { title: 'Viral Clip 5', url: '/videos/clip5.mp4' },
+  { title: "Viral Clip 1", url: "/videos/clip1.mp4" },
+  { title: "Viral Clip 2", url: "/videos/clip2.mp4" },
+  { title: "Viral Clip 3", url: "/videos/clip3.mp4" },
+  { title: "Viral Clip 4", url: "/videos/clip4.mp4" },
+  { title: "Viral Clip 5", url: "/videos/clip5.mp4" },
 ];
 
 export default function Top5ViralNews() {
@@ -18,35 +17,60 @@ export default function Top5ViralNews() {
   useEffect(() => {
     timeout.current = setTimeout(() => {
       setCurrent((prev) => (prev + 1) % viralVideos.length);
-    }, 10000); // Switch every 10 seconds
+    }, 10000);
     return () => clearTimeout(timeout.current);
   }, [current]);
 
   return (
-    <Card sx={{
-      mb: 3,
-      background: '#FFFADC',
-      boxShadow: 3,
-      transition: 'transform 0.3s',
-      cursor: 'pointer',
-      '&:hover': { transform: 'scale(1.03)', boxShadow: 6 },
-    }}>
-      <CardContent>
-        <Typography variant="h6" gutterBottom color="primary">
-          Top 5 Viral News
-        </Typography>
-        <Card
+    <Box sx={{ mb: 3 }}>
+      {/* Section Header - Compact Newspaper Style */}
+      <Box sx={{ mb: 1.5 }}>
+        <Typography
+          variant="h6"
           sx={{
-            p: 1,
-            background: '#fff',
-            borderRadius: 2,
-            transition: 'transform 0.3s',
-            minWidth: 130,
-            maxWidth: 300,
-            margin: '0 auto',
-            boxShadow: 1,
-            cursor: 'pointer',
-            '&:hover': { transform: 'scale(1.04)', boxShadow: 8 }
+            fontWeight: 900,
+            fontSize: "0.95rem",
+            color: "#1a1a1a",
+            textTransform: "uppercase",
+            letterSpacing: "1.5px",
+            fontFamily: "'Georgia', 'Garamond', serif",
+            mb: 0.8,
+          }}
+        >
+          Top Viral
+        </Typography>
+        <Box
+          sx={{
+            width: "50px",
+            height: "3px",
+            background: "#dc2626",
+            borderRadius: "2px",
+          }}
+        />
+      </Box>
+
+      {/* Video Card - Compact with Border */}
+      <Box
+        sx={{
+          background: "#ffffff",
+          border: "1px solid #e8e8e8",
+          borderRadius: "0px",
+          overflow: "hidden",
+          transition: "all 0.3s ease",
+          cursor: "pointer",
+          "&:hover": {
+            borderColor: "#dc2626",
+            borderWidth: "2px",
+          },
+        }}
+      >
+        {/* Video Container */}
+        <Box
+          sx={{
+            position: "relative",
+            width: "100%",
+            paddingTop: "56.25%", // 16:9 aspect ratio
+            background: "#000000",
           }}
         >
           <video
@@ -56,13 +80,55 @@ export default function Top5ViralNews() {
             autoPlay
             loop
             muted
-            style={{ width: '100%', borderRadius: 8 }}
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+            }}
           />
-          <Typography align="center" variant="body2">
+        </Box>
+
+        {/* Video Title - Compact */}
+        <Box
+          sx={{
+            p: 1.5,
+            borderTop: "1px solid #e8e8e8",
+            background: "#fef2f2",
+          }}
+        >
+          <Typography
+            variant="caption"
+            sx={{
+              fontWeight: 700,
+              fontSize: "0.8rem",
+              color: "#1a1a1a",
+              display: "block",
+              textAlign: "center",
+              fontFamily: "'Georgia', 'Garamond', serif",
+            }}
+          >
             {viralVideos[current].title}
           </Typography>
-        </Card>
-      </CardContent>
-    </Card>
+
+          {/* Video Counter */}
+          <Typography
+            variant="caption"
+            sx={{
+              fontSize: "0.7rem",
+              color: "#dc2626",
+              fontWeight: 700,
+              display: "block",
+              textAlign: "center",
+              mt: 0.5,
+            }}
+          >
+            {current + 1} / {viralVideos.length}
+          </Typography>
+        </Box>
+      </Box>
+    </Box>
   );
 }
