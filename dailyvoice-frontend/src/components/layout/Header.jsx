@@ -32,7 +32,8 @@ const Header = () => {
             <a href="?cat=politics" className="hover:text-red-700">Politics</a>
             <a href="?cat=sports" className="hover:text-red-700">Sports</a>
             <a href="?cat=entertainment" className="hover:text-red-700">Entertainment</a>
-            <a href="?cat=tech" className="hover:text-red-700">Tech</a>
+            <a href="?cat=tech" className="hover:text-red-700">Finance</a>
+            <a href="?category=defence">Defence</a>
           </nav>
           <div className="flex items-center gap-3">
             <button className="px-5 py-2 bg-blue-600 text-white rounded font-bold text-sm hover:bg-blue-700 transition">SUBSCRIBE</button>

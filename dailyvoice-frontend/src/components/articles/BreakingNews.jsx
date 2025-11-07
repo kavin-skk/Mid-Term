@@ -1,11 +1,9 @@
 import React from 'react';
+import LeadArticle from "./LeadArticle";
 
 const BreakingNews = ({ items }) => (
   <div>
     <div className="flex items-center mb-4">
-      <span className="bg-red-600 text-white px-3 py-1.5 font-bold text-sm mr-3 rounded">
-        <i className="fas fa-bolt mr-1"></i>BREAKING
-      </span>
       <h2 className="text-xl font-bold text-gray-900" style={{fontFamily: "'Playfair Display', serif"}}>Latest Updates</h2>
     </div>
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

@@ -21,9 +21,8 @@ const PopularArticle = ({ item, catKey, catName }) => (
           <a href="/article?id=1" className="hover:text-red-700 transition">{item.title}</a>
         </h3>
         <p className="text-sm text-gray-600 mb-3 line-clamp-3 leading-relaxed">{item.summary}</p>
-        <div className="flex items-center justify-between text-xs text-gray-500">
+        <div className="flex items-center text-xs text-gray-500">
           <span><i className="fas fa-clock"></i> {item.time} ago</span>
-          <span><i className="fas fa-bookmark"></i> Save</span>
         </div>
       </div>
     </article>

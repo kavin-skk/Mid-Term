@@ -17,9 +17,8 @@ const BelowBreakingNews = ({ items }) => (
             <h4 className="font-semibold text-sm line-clamp-2 mb-1 leading-snug hover:text-red-600 transition">
               <a href={`/article?id=${item.id}`}>{item.title}</a>
             </h4>
-            <div className="flex items-center gap-3 text-xs text-gray-500">
+            <div className="flex items-center text-xs text-gray-500">
               <span><i className="fas fa-clock"></i> {item.time} ago</span>
-              <span><i className="fas fa-eye"></i> {Math.floor(Math.random() * 50 + 10)}K views</span>
             </div>
           </div>
         </div>

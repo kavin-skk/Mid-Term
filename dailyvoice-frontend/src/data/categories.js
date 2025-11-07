@@ -1,7 +1,7 @@
 export const CATEGORIES = {
   politics: {
     name: "Politics", 
-    sub: ["National", "Tamil Nadu", "Bihar", "UP", "International"],
+    sub: ["National", "Tamil Nadu", "Bihar", "UP", "International","cities"],
     ticker: "Parliament Debate Live | Opposition Walkout | TN CM Speech | Bihar Election Updates",
     lead: { 
       id: 1, 
@@ -191,4 +191,6 @@ missed: [
   }
 ]
   }
+  
+  
 };

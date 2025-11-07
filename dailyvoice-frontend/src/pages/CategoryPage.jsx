@@ -26,6 +26,7 @@ import Further from '../components/sidebar/Further';
 import CompactNews from '../components/sidebar/CompactNews';
 import Chatbot from '../components/common/Chatbot';
 import { CATEGORIES } from '../data/categories';
+import Breakingbreaking from "../components/articles/Breakingbreaking"
 
 const CategoryPage = ({ category = 'politics' }) => {
   const cat = CATEGORIES[category] || CATEGORIES.politics;
@@ -54,7 +55,8 @@ const CategoryPage = ({ category = 'politics' }) => {
 
         {/* MAIN CONTENT */}
         <main className="md:col-span-6 space-y-8">
-          <LeadArticle lead={cat.lead} catName={cat.name} />
+          {/* <LeadArticle lead={cat.lead} catName={cat.name} /> */}
+          <Breakingbreaking />
           <BreakingNews items={cat.breaking} />
           <BelowBreakingNews items={cat.belowBreaking} />
           <ArticlesGrid articles={cat.articles} catKey={category} />

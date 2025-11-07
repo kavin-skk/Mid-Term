@@ -8,6 +8,7 @@ function App() {
   const category = urlParams.get('cat') || 'politics';
 
   return <CategoryPage category={category} />;
+  
 }
 
 export default App;
