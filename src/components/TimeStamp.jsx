@@ -1,19 +1,18 @@
 import Box from "@mui/material/Box";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
 
 export default function TimeStamp({ time }) {
   return (
     <Box
+      component="span"
       sx={{
-        display: "flex",
+        fontSize: "12px",
+        color: "#6a6a6a",
+        display: "inline-flex",
         alignItems: "center",
-        gap: 0.5,
-        color: "#666666",
-        fontSize: "0.75rem",
-        fontWeight: 600,
+        gap: "4px",
       }}
     >
-      <AccessTimeIcon sx={{ fontSize: "0.9rem", color: "#dc2626" }} />
+      <span>🕐</span>
       <span>{time}</span>
     </Box>
   );

@@ -14,6 +14,7 @@ export default function LeftColumnAd() {
         alignItems: "center",
         justifyContent: "center",
         transition: "all 0.3s ease",
+        paddingBottom:7,
         cursor: "pointer",
         "&:hover": {
           borderColor: "#dc2626",

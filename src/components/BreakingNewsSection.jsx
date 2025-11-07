@@ -1,10 +1,13 @@
+import { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import CategoryBadge from "./CategoryBadge";
 import TimeStamp from "./TimeStamp";
 import ViewCount from "./ViewCount";
 import ReadMoreButton from "./ReadMoreButton";
+import NewsService from "../services/NewsService";
 
+// Fallback images
 import supremeCourtImg from "../assets/supremecourt.png";
 import aiImg from "../assets/AI.png";
 import cricketImg from "../assets/indianworldcup.png";
@@ -12,49 +15,57 @@ import climateImg from "../assets/climatechange.png";
 import economyImg from "../assets/economy.png";
 
 export default function BreakingNewsSection() {
-  const mainNews = {
-    category: "Breaking",
-    title: "Breaking News: US Supreme Court Limits Executive Trade Powers",
-    desc: "In a landmark ruling, the US top court restricts the President's ability to make unilateral trade decisions — a move experts say could bring stability to global markets.",
-    img: supremeCourtImg,
-    time: "2 hours ago",
-    views: 125000,
+  const [mainNews, setMainNews] = useState(null);
+  const [subNews, setSubNews] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchNews();
+  }, []);
+
+  const fetchNews = async () => {
+    try {
+      const allNews = await NewsService.getAllNews();
+      
+      if (allNews && allNews.length > 0) {
+        setMainNews(allNews[0]); // First article
+        setSubNews(allNews.slice(1, 5)); // Next 4 articles
+      }
+    } catch (error) {
+      console.error("Error fetching news:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const subNews = [
-    {
-      category: "Technology",
-      title: "Tech Giants Face New AI Regulation",
-      desc: "Global leaders agree on guidelines for responsible artificial intelligence use.",
-      img: aiImg,
-      time: "5 hours ago",
-      views: 89000,
-    },
-    {
-      category: "Sports",
-      title: "Cricket World Cup 2025: India Through to Semis",
-      desc: "India secures semifinal spot after a thrilling win against Australia.",
-      img: cricketImg,
-      time: "1 hour ago",
-      views: 234000,
-    },
-    {
-      category: "World",
-      title: "Global Climate Talks Gain Momentum",
-      desc: "Nations commit to faster carbon reduction in the latest UN summit.",
-      img: climateImg,
-      time: "3 hours ago",
-      views: 67000,
-    },
-    {
-      category: "Economy",
-      title: "Economic Outlook Brightens for Asia",
-      desc: "IMF projects strong growth rebound led by India and Southeast Asia.",
-      img: economyImg,
-      time: "4 hours ago",
-      views: 52000,
-    },
-  ];
+  // Format time from ISO date
+  const getTimeAgo = (dateString) => {
+    if (!dateString) return "Just now";
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffMs = now - date;
+    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+    
+    if (diffHours < 1) return 'Just now';
+    if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+    const diffDays = Math.floor(diffHours / 24);
+    return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+  };
+
+  // Get random views
+  const getViews = () => Math.floor(Math.random() * 200000) + 50000;
+
+  if (loading) {
+    return (
+      <Box sx={{ p: 4, textAlign: 'center' }}>
+        <Typography>Loading breaking news...</Typography>
+      </Box>
+    );
+  }
+
+  if (!mainNews) {
+    return null;
+  }
 
   return (
     <Box sx={{ width: "100%", display: "flex", justifyContent: "center" }}>
@@ -67,7 +78,7 @@ export default function BreakingNewsSection() {
           gap: 2,
         }}
       >
-        {/* HERO BREAKING NEWS - More Compact & Professional */}
+        {/* HERO BREAKING NEWS - Exact same design, just API data */}
         <Box
           sx={{
             width: "100%",
@@ -83,6 +94,7 @@ export default function BreakingNewsSection() {
               transform: "translateY(-2px)",
             },
           }}
+          onClick={() => mainNews.url && window.open(mainNews.url, '_blank')}
         >
           {/* Breaking Badge - Compact */}
           <Box
@@ -117,7 +129,7 @@ export default function BreakingNewsSection() {
             Breaking News
           </Box>
 
-          {/* Hero Image - Taller for Impact */}
+          {/* Hero Image */}
           <Box
             sx={{
               width: "100%",
@@ -128,7 +140,7 @@ export default function BreakingNewsSection() {
             }}
           >
             <img
-              src={mainNews.img}
+              src={mainNews.urlToImage || supremeCourtImg}
               alt="Breaking News"
               style={{
                 width: "100%",
@@ -138,8 +150,10 @@ export default function BreakingNewsSection() {
               }}
               onMouseEnter={(e) => (e.target.style.transform = "scale(1.05)")}
               onMouseLeave={(e) => (e.target.style.transform = "scale(1)")}
+              onError={(e) => {
+                e.target.src = supremeCourtImg;
+              }}
             />
-            {/* Enhanced Gradient Overlay */}
             <Box
               sx={{
                 position: "absolute",
@@ -154,9 +168,8 @@ export default function BreakingNewsSection() {
             />
           </Box>
 
-          {/* Content - More Compact Spacing */}
+          {/* Content */}
           <Box sx={{ p: 2.5 }}>
-            {/* Meta Info Row - Compact */}
             <Box
               sx={{
                 display: "flex",
@@ -166,12 +179,11 @@ export default function BreakingNewsSection() {
                 flexWrap: "wrap",
               }}
             >
-              <CategoryBadge category={mainNews.category} />
-              <TimeStamp time={mainNews.time} />
-              <ViewCount count={mainNews.views} />
+              <CategoryBadge category={mainNews.source?.name || "Breaking"} />
+              <TimeStamp time={getTimeAgo(mainNews.publishedAt)} />
+              <ViewCount count={getViews()} />
             </Box>
 
-            {/* Headline - Bigger & Bolder */}
             <Typography
               variant="h4"
               sx={{
@@ -187,7 +199,6 @@ export default function BreakingNewsSection() {
               {mainNews.title}
             </Typography>
 
-            {/* Description - Professional */}
             <Typography
               variant="body1"
               sx={{
@@ -198,124 +209,130 @@ export default function BreakingNewsSection() {
                 mb: 2,
               }}
             >
-              {mainNews.desc}
+              {mainNews.description || "Read the full story for more details."}
             </Typography>
 
-            <ReadMoreButton onClick={() => console.log("Navigate to article")} />
+            <ReadMoreButton onClick={() => mainNews.url && window.open(mainNews.url, '_blank')} />
           </Box>
         </Box>
 
-        {/* SUB-NEWS GRID - More Compact Cards */}
-        <Box
-          sx={{
-            display: "grid",
-            gridTemplateColumns: { xs: "1fr", md: "repeat(2, 1fr)" },
-            gap: 2,
-            width: "100%",
-          }}
-        >
-          {subNews.map((news, index) => (
-            <Box
-              key={index}
-              sx={{
-                background: "#ffffff",
-                border: "1px solid #e0e0e0",
-                borderRadius: "3px",
-                overflow: "hidden",
-                transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-                cursor: "pointer",
-                "&:hover": {
-                  borderColor: "#c41e3a",
-                  borderWidth: "2px",
-                  transform: "translateY(-3px)",
-                  boxShadow: "0 6px 16px rgba(0, 0, 0, 0.08)",
-                },
-              }}
-            >
-              {/* Image - Compact 16:9 Ratio */}
-              <Box
-                sx={{
-                  width: "100%",
-                  height: "200px",
-                  overflow: "hidden",
-                  borderBottom: "1px solid #e0e0e0",
-                  background: "#000",
-                  position: "relative",
-                }}
-              >
-                <img
-                  src={news.img}
-                  alt={news.title}
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "cover",
-                    transition: "transform 0.4s ease",
-                  }}
-                  onMouseEnter={(e) => (e.target.style.transform = "scale(1.05)")}
-                  onMouseLeave={(e) => (e.target.style.transform = "scale(1)")}
-                />
-              </Box>
-
-              {/* Content - Tighter Spacing */}
-              <Box sx={{ p: 2 }}>
-                {/* Meta Info - Compact */}
+        {/* SUB-NEWS GRID - Exact same design */}
+        {subNews.length > 0 && (
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns: { xs: "1fr", md: "repeat(2, 1fr)" },
+              gap: 2,
+              width: "100%",
+            }}
+          >
+            {subNews.map((news, index) => {
+              // Fallback images for sub-news
+              const fallbackImages = [aiImg, cricketImg, climateImg, economyImg];
+              
+              return (
                 <Box
+                  key={index}
                   sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 1,
-                    mb: 1.5,
-                    flexWrap: "wrap",
+                    background: "#ffffff",
+                    border: "1px solid #e0e0e0",
+                    borderRadius: "3px",
+                    overflow: "hidden",
+                    transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                    cursor: "pointer",
+                    "&:hover": {
+                      borderColor: "#c41e3a",
+                      borderWidth: "2px",
+                      transform: "translateY(-3px)",
+                      boxShadow: "0 6px 16px rgba(0, 0, 0, 0.08)",
+                    },
                   }}
+                  onClick={() => news.url && window.open(news.url, '_blank')}
                 >
-                  <CategoryBadge category={news.category} />
-                  <TimeStamp time={news.time} />
-                  <ViewCount count={news.views} />
+                  <Box
+                    sx={{
+                      width: "100%",
+                      height: "200px",
+                      overflow: "hidden",
+                      borderBottom: "1px solid #e0e0e0",
+                      background: "#000",
+                      position: "relative",
+                    }}
+                  >
+                    <img
+                      src={news.urlToImage || fallbackImages[index % 4]}
+                      alt={news.title}
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                        transition: "transform 0.4s ease",
+                      }}
+                      onMouseEnter={(e) => (e.target.style.transform = "scale(1.05)")}
+                      onMouseLeave={(e) => (e.target.style.transform = "scale(1)")}
+                      onError={(e) => {
+                        e.target.src = fallbackImages[index % 4];
+                      }}
+                    />
+                  </Box>
+
+                  <Box sx={{ p: 2 }}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 1,
+                        mb: 1.5,
+                        flexWrap: "wrap",
+                      }}
+                    >
+                      <CategoryBadge category={news.source?.name || "News"} />
+                      <TimeStamp time={getTimeAgo(news.publishedAt)} />
+                      <ViewCount count={getViews()} />
+                    </Box>
+
+                    <Typography
+                      variant="h6"
+                      sx={{
+                        fontWeight: 700,
+                        fontSize: "1.1rem",
+                        color: "#1a1a1a",
+                        mb: 1,
+                        lineHeight: 1.3,
+                        fontFamily: "'Georgia', serif",
+                        display: "-webkit-box",
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: "vertical",
+                        overflow: "hidden",
+                      }}
+                    >
+                      {news.title}
+                    </Typography>
+
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        fontSize: "0.9rem",
+                        color: "#6a6a6a",
+                        lineHeight: 1.5,
+                        fontFamily: "'Segoe UI', sans-serif",
+                        mb: 1.5,
+                        display: "-webkit-box",
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: "vertical",
+                        overflow: "hidden",
+                      }}
+                    >
+                      {news.description || "Click to read more..."}
+                    </Typography>
+
+                    <ReadMoreButton onClick={() => news.url && window.open(news.url, '_blank')} />
+                  </Box>
                 </Box>
-
-                {/* Title - Bold & Professional */}
-                <Typography
-                  variant="h6"
-                  sx={{
-                    fontWeight: 700,
-                    fontSize: "1.1rem",
-                    color: "#1a1a1a",
-                    mb: 1,
-                    lineHeight: 1.3,
-                    fontFamily: "'Georgia', serif",
-                    display: "-webkit-box",
-                    WebkitLineClamp: 2,
-                    WebkitBoxOrient: "vertical",
-                    overflow: "hidden",
-                  }}
-                >
-                  {news.title}
-                </Typography>
-
-                {/* Description - Compact */}
-                <Typography
-                  variant="body2"
-                  sx={{
-                    fontSize: "0.9rem",
-                    color: "#6a6a6a",
-                    lineHeight: 1.5,
-                    fontFamily: "'Segoe UI', sans-serif",
-                    mb: 1.5,
-                    display: "-webkit-box",
-                    WebkitLineClamp: 2,
-                    WebkitBoxOrient: "vertical",
-                    overflow: "hidden",
-                  }}
-                >
-                  {news.desc}
-                </Typography>
-
-                <ReadMoreButton onClick={() => console.log("Navigate to article")} />
-              </Box>
-            </Box>
-          ))}
-        </Box>
+              );
+            })}
+          </Box>
+        )}
       </Box>
     </Box>
   );

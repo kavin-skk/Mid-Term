@@ -1,51 +1,79 @@
+import { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import CategoryBadge from "./CategoryBadge";
 import TimeStamp from "./TimeStamp";
 import ViewCount from "./ViewCount";
 import ReadMoreButton from "./ReadMoreButton";
+import NewsService from "../services/NewsService";
 
+// Fallback images
 import newsImg1 from "../assets/climatechange.png";
 import newsImg2 from "../assets/economy.png";
 import newsImg3 from "../assets/AI.png";
 import newsImg4 from "../assets/indianworldcup.png";
 
-const exploreBlocks = [
-  {
-    category: "World",
-    title: "Global Climate Talks Gain Momentum",
-    desc: "Nations commit to faster carbon reduction at the latest UN summit.",
-    img: newsImg1,
-    time: "6 hours ago",
-    views: 45000,
-  },
-  {
-    category: "Economy",
-    title: "Economic Outlook Brightens for Asia",
-    desc: "IMF projects strong growth rebound led by India and Southeast Asia.",
-    img: newsImg2,
-    time: "4 hours ago",
-    views: 38000,
-  },
-  {
-    category: "Technology",
-    title: "Tech Giants Face Fresh Data Privacy Scrutiny",
-    desc: "Major tech firms are under review for new privacy regulations worldwide.",
-    img: newsImg3,
-    time: "8 hours ago",
-    views: 62000,
-  },
-  {
-    category: "Sports",
-    title: "ISRO Prepares for Chandrayaan-4 Mission",
-    desc: "Final testing begins as India plans a new lunar surface study.",
-    img: newsImg4,
-    time: "3 hours ago",
-    views: 91000,
-  },
-];
-
 export default function ExploreMore() {
+  const [exploreBlocks, setExploreBlocks] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchExploreNews();
+  }, []);
+
+  const fetchExploreNews = async () => {
+    try {
+      const news = await NewsService.getAllNews();
+      
+      if (news && news.length > 0) {
+        // Take 4 articles for explore section
+        const exploreNews = news.slice(4, 8).map((article, index) => ({
+          category: article.source?.name || "News",
+          title: article.title,
+          desc: article.description || "Click to read more about this story...",
+          img: article.urlToImage,
+          time: getTimeAgo(article.publishedAt),
+          views: Math.floor(Math.random() * 100000 + 30000),
+          url: article.url,
+          fallbackImg: [newsImg1, newsImg2, newsImg3, newsImg4][index % 4]
+        }));
+        
+        setExploreBlocks(exploreNews);
+      }
+    } catch (error) {
+      console.error("Error fetching explore news:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getTimeAgo = (dateString) => {
+    if (!dateString) return "Just now";
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffMs = now - date;
+    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+    
+    if (diffHours < 1) return 'Just now';
+    if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+    const diffDays = Math.floor(diffHours / 24);
+    return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+  };
+
+  if (loading) {
+    return (
+      <Box sx={{ width: "100%", background: "#ffffff", py: 4, px: 3, textAlign: 'center' }}>
+        <Typography sx={{ fontSize: '0.9rem', color: '#666' }}>
+          Loading more news...
+        </Typography>
+      </Box>
+    );
+  }
+
+  if (!exploreBlocks.length) {
+    return null;
+  }
+
   return (
     <Box
       sx={{
@@ -57,7 +85,7 @@ export default function ExploreMore() {
         borderBottom: "1px solid #e8e8e8",
       }}
     >
-      {/* Section Header */}
+      {/* Section Header - Same design */}
       <Box
         sx={{
           maxWidth: "1300px",
@@ -88,7 +116,7 @@ export default function ExploreMore() {
         />
       </Box>
 
-      {/* Grid Cards */}
+      {/* Grid Cards - Same design */}
       <Box
         sx={{
           maxWidth: "1300px",
@@ -121,6 +149,7 @@ export default function ExploreMore() {
                 boxShadow: "0 4px 8px rgba(220, 38, 38, 0.15)",
               },
             }}
+            onClick={() => item.url && window.open(item.url, '_blank')}
           >
             {/* Image */}
             <Box
@@ -132,12 +161,15 @@ export default function ExploreMore() {
               }}
             >
               <img
-                src={item.img}
+                src={item.img || item.fallbackImg}
                 alt={item.title}
                 style={{
                   width: "100%",
                   height: "100%",
                   objectFit: "cover",
+                }}
+                onError={(e) => {
+                  e.target.src = item.fallbackImg;
                 }}
               />
             </Box>
@@ -168,6 +200,10 @@ export default function ExploreMore() {
                   lineHeight: 1.3,
                   fontFamily: "'Georgia', 'Garamond', serif",
                   flex: 1,
+                  display: "-webkit-box",
+                  WebkitLineClamp: 2,
+                  WebkitBoxOrient: "vertical",
+                  overflow: "hidden",
                 }}
               >
                 {item.title}
@@ -181,6 +217,10 @@ export default function ExploreMore() {
                   lineHeight: 1.5,
                   fontFamily: "'Georgia', 'Garamond', serif",
                   mb: 1.5,
+                  display: "-webkit-box",
+                  WebkitLineClamp: 2,
+                  WebkitBoxOrient: "vertical",
+                  overflow: "hidden",
                 }}
               >
                 {item.desc}
@@ -197,7 +237,10 @@ export default function ExploreMore() {
                 }}
               >
                 <ViewCount count={item.views} />
-                <ReadMoreButton onClick={() => console.log("Navigate to article")} />
+                <ReadMoreButton onClick={(e) => {
+                  e.stopPropagation();
+                  item.url && window.open(item.url, '_blank');
+                }} />
               </Box>
             </Box>
           </Box>

@@ -1,44 +1,84 @@
+import { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import CategoryBadge from "./CategoryBadge";
 import TimeStamp from "./TimeStamp";
+import NewsService from "../services/NewsService";
 
+// Fallback images
 import newsImg1 from "../assets/climatechange.png";
 import newsImg2 from "../assets/AI.png";
 import newsImg3 from "../assets/economy.png";
 import newsImg4 from "../assets/indianworldcup.png";
 
-const headlines = [
-  {
-    title: "Markets Rally on Strong Economic Data",
-    category: "Economy",
-    time: "1 hour ago",
-    img: newsImg1,
-  },
-  {
-    title: "Tech Summit Announces AI Breakthrough",
-    category: "Technology",
-    time: "2 hours ago",
-    img: newsImg2,
-  },
-  {
-    title: "Government Unveils New Infrastructure Plan",
-    category: "Politics",
-    time: "3 hours ago",
-    img: newsImg3,
-  },
-  {
-    title: "Cricket: India Wins Series Finale",
-    category: "Sports",
-    time: "4 hours ago",
-    img: newsImg4,
-  },
-];
-
 export default function LatestHeadlines() {
+  const [headlines, setHeadlines] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchHeadlines();
+  }, []);
+
+  const fetchHeadlines = async () => {
+    try {
+      const news = await NewsService.getAllNews();
+      
+      if (news && news.length > 0) {
+        const fallbackImages = [newsImg1, newsImg2, newsImg3, newsImg4];
+        
+        const headlineData = news.slice(0, 4).map((article, index) => ({
+          title: article.title,
+          category: article.source?.name || "News",
+          time: getTimeAgo(article.publishedAt),
+          img: article.urlToImage || fallbackImages[index],
+          url: article.url,
+        }));
+        
+        setHeadlines(headlineData);
+      }
+    } catch (error) {
+      console.error("Error fetching headlines:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getTimeAgo = (dateString) => {
+    if (!dateString) return "Just now";
+    
+    try {
+      const date = new Date(dateString);
+      const now = new Date();
+      const diffMs = now - date;
+      const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+      
+      if (diffHours < 1) return 'Just now';
+      if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+      
+      const diffDays = Math.floor(diffHours / 24);
+      return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+    } catch {
+      return "Recently";
+    }
+  };
+
+  if (loading) {
+    return (
+      <Box sx={{ mb: 3, textAlign: 'center', py: 2 }}>
+        <Typography sx={{ fontSize: '0.8rem', color: '#666' }}>
+          Loading headlines...
+        </Typography>
+      </Box>
+    );
+  }
+
+  if (!headlines.length) {
+    return null;
+  }
+
   return (
     <Box sx={{ mb: 3 }}>
-      {/* Header */}
+      {/* Header - Professional */}
       <Typography
         variant="h6"
         sx={{
@@ -56,7 +96,7 @@ export default function LatestHeadlines() {
         Latest Headlines
       </Typography>
 
-      {/* Headlines List */}
+      {/* Headlines List - FIXED LAYOUT */}
       <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
         {headlines.map((item, index) => (
           <Box
@@ -66,8 +106,8 @@ export default function LatestHeadlines() {
               gap: 1.5,
               background: "#ffffff",
               border: "1px solid #e8e8e8",
-              borderRadius: "0px",
-              p: 1.2,
+              borderRadius: "4px",
+              overflow: "hidden",
               cursor: "pointer",
               transition: "all 0.3s ease",
               "&:hover": {
@@ -76,15 +116,16 @@ export default function LatestHeadlines() {
                 boxShadow: "0 4px 12px rgba(220, 38, 38, 0.15)",
               },
             }}
+            onClick={() => item.url && window.open(item.url, '_blank')}
           >
-            {/* Image */}
+            {/* Image - Larger & Better */}
             <Box
               sx={{
-                width: "80px",
-                height: "80px",
+                width: "100px",
+                height: "100px",
                 flexShrink: 0,
-                borderRadius: "4px",
                 overflow: "hidden",
+                background: "#000",
               }}
             >
               <img
@@ -94,19 +135,34 @@ export default function LatestHeadlines() {
                   width: "100%",
                   height: "100%",
                   objectFit: "cover",
+                  transition: "transform 0.3s ease",
                 }}
+                onError={(e) => {
+                  e.target.src = newsImg1;
+                }}
+                onMouseEnter={(e) => e.target.style.transform = "scale(1.05)"}
+                onMouseLeave={(e) => e.target.style.transform = "scale(1)"}
               />
             </Box>
 
-            {/* Content */}
-            <Box sx={{ flex: 1, display: "flex", flexDirection: "column", gap: 0.8 }}>
-              {/* Category + Time */}
-              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            {/* Content - FIXED VERTICAL LAYOUT */}
+            <Box 
+              sx={{ 
+                flex: 1, 
+                display: "flex", 
+                flexDirection: "column", 
+                justifyContent: "space-between",
+                py: 1.2,
+                pr: 1.2,
+                minWidth: 0, // Important for text truncation
+              }}
+            >
+              {/* Category Badge - Top */}
+              <Box>
                 <CategoryBadge category={item.category} />
-                <TimeStamp time={item.time} />
               </Box>
 
-              {/* Title */}
+              {/* Title - Middle */}
               <Typography
                 sx={{
                   fontWeight: 700,
@@ -118,10 +174,16 @@ export default function LatestHeadlines() {
                   WebkitLineClamp: 2,
                   WebkitBoxOrient: "vertical",
                   overflow: "hidden",
+                  my: 0.5,
                 }}
               >
                 {item.title}
               </Typography>
+
+              {/* Timestamp - Bottom */}
+              <Box>
+                <TimeStamp time={item.time} />
+              </Box>
             </Box>
           </Box>
         ))}

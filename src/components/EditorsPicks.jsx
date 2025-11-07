@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
@@ -8,54 +8,81 @@ import CategoryBadge from "./CategoryBadge";
 import TimeStamp from "./TimeStamp";
 import ViewCount from "./ViewCount";
 import ReadMoreButton from "./ReadMoreButton";
+import NewsService from "../services/NewsService";
 
+// Fallback images
 import pickImg1 from "../assets/climatechange.png";
 import pickImg2 from "../assets/AI.png";
 import pickImg3 from "../assets/economy.png";
 import pickImg4 from "../assets/indianworldcup.png";
 
-const picks = [
-  {
-    category: "Technology",
-    title: "Inside India's AI Revolution",
-    desc: "Editor's analysis of India's advancements in AI, ethics, and regulation.",
-    img: pickImg1,
-    time: "1 day ago",
-    views: 156000,
-  },
-  {
-    category: "World",
-    title: "Climate Policies: Editor's Choice",
-    desc: "A look at government and NGOs collaborating for change.",
-    img: pickImg2,
-    time: "2 days ago",
-    views: 98000,
-  },
-  {
-    category: "Economy",
-    title: "Markets: The Next Big Wave",
-    desc: "Expert insight on bullish sectors for the second half of the year.",
-    img: pickImg3,
-    time: "1 day ago",
-    views: 112000,
-  },
-  {
-    category: "Sports",
-    title: "Women Leaders in Tech",
-    desc: "Celebrating the rise of impactful female entrepreneurs.",
-    img: pickImg4,
-    time: "3 days ago",
-    views: 87000,
-  },
-];
-
 export default function EditorsPicks() {
   const [page, setPage] = useState(0);
+  const [picks, setPicks] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const handleNext = () => setPage(1);
-  const handlePrev = () => setPage(0);
+  useEffect(() => {
+    fetchEditorsPicks();
+  }, []);
+
+  const fetchEditorsPicks = async () => {
+    try {
+      const news = await NewsService.getNewsByCategory('technology');
+      
+      if (news && news.length > 0) {
+        // Take up to 8 articles for carousel (2 pages of 4)
+        const editorPicks = news.slice(0, 8).map((article, index) => ({
+          category: article.source?.name || "Technology",
+          title: article.title,
+          desc: article.description || "Read more about this fascinating story...",
+          img: article.urlToImage,
+          time: getTimeAgo(article.publishedAt),
+          views: Math.floor(Math.random() * 100000 + 50000),
+          url: article.url,
+          fallbackImg: [pickImg1, pickImg2, pickImg3, pickImg4][index % 4]
+        }));
+        
+        setPicks(editorPicks);
+      }
+    } catch (error) {
+      console.error("Error fetching editor's picks:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getTimeAgo = (dateString) => {
+    if (!dateString) return "Just now";
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffMs = now - date;
+    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+    
+    if (diffHours < 1) return 'Just now';
+    if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+    const diffDays = Math.floor(diffHours / 24);
+    return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+  };
+
+  const handleNext = () => setPage((prev) => Math.min(prev + 1, Math.ceil(picks.length / 4) - 1));
+  const handlePrev = () => setPage((prev) => Math.max(prev - 1, 0));
 
   const visiblePicks = picks.slice(page * 4, page * 4 + 4);
+  const maxPages = Math.ceil(picks.length / 4);
+
+  if (loading) {
+    return (
+      <Box sx={{ width: "100%", background: "#ffffff", py: 4, px: 3, textAlign: 'center' }}>
+        <Typography sx={{ fontSize: '0.9rem', color: '#666' }}>
+          Loading Editor's Picks...
+        </Typography>
+      </Box>
+    );
+  }
+
+  if (!picks.length) {
+    return null;
+  }
 
   return (
     <Box
@@ -68,7 +95,7 @@ export default function EditorsPicks() {
         borderBottom: "1px solid #e8e8e8",
       }}
     >
-      {/* Section Header with Navigation */}
+      {/* Section Header with Navigation - Same design */}
       <Box
         sx={{
           maxWidth: "1300px",
@@ -110,9 +137,9 @@ export default function EditorsPicks() {
             </IconButton>
             <IconButton
               onClick={handleNext}
-              disabled={page === 1}
+              disabled={page >= maxPages - 1}
               sx={{
-                bgcolor: page === 1 ? "#e8e8e8" : "#dc2626",
+                bgcolor: page >= maxPages - 1 ? "#e8e8e8" : "#dc2626",
                 color: "#ffffff",
                 width: 35,
                 height: 35,
@@ -128,7 +155,7 @@ export default function EditorsPicks() {
         <Box sx={{ width: "80px", height: "3px", background: "#dc2626", mt: 1 }} />
       </Box>
 
-      {/* Cards Grid */}
+      {/* Cards Grid - Same design */}
       <Box
         sx={{
           maxWidth: "1300px",
@@ -161,6 +188,7 @@ export default function EditorsPicks() {
                 boxShadow: "0 4px 8px rgba(220, 38, 38, 0.15)",
               },
             }}
+            onClick={() => pick.url && window.open(pick.url, '_blank')}
           >
             {/* Image */}
             <Box
@@ -172,12 +200,15 @@ export default function EditorsPicks() {
               }}
             >
               <img
-                src={pick.img}
+                src={pick.img || pick.fallbackImg}
                 alt={pick.title}
                 style={{
                   width: "100%",
                   height: "100%",
                   objectFit: "cover",
+                }}
+                onError={(e) => {
+                  e.target.src = pick.fallbackImg;
                 }}
               />
             </Box>
@@ -208,6 +239,10 @@ export default function EditorsPicks() {
                   lineHeight: 1.3,
                   fontFamily: "'Georgia', 'Garamond', serif",
                   flex: 1,
+                  display: "-webkit-box",
+                  WebkitLineClamp: 2,
+                  WebkitBoxOrient: "vertical",
+                  overflow: "hidden",
                 }}
               >
                 {pick.title}
@@ -221,6 +256,10 @@ export default function EditorsPicks() {
                   lineHeight: 1.5,
                   fontFamily: "'Georgia', 'Garamond', serif",
                   mb: 1.5,
+                  display: "-webkit-box",
+                  WebkitLineClamp: 2,
+                  WebkitBoxOrient: "vertical",
+                  overflow: "hidden",
                 }}
               >
                 {pick.desc}
@@ -237,7 +276,10 @@ export default function EditorsPicks() {
                 }}
               >
                 <ViewCount count={pick.views} />
-                <ReadMoreButton onClick={() => console.log("Navigate to article")} />
+                <ReadMoreButton onClick={(e) => {
+                  e.stopPropagation();
+                  pick.url && window.open(pick.url, '_blank');
+                }} />
               </Box>
             </Box>
           </Box>

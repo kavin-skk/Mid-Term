@@ -6,45 +6,64 @@ import { Autoplay, Pagination, Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
+import NewsService from "../services/NewsService";
 
+// Fallback images
 import newsImg1 from "../assets/AI.png";
 import newsImg2 from "../assets/climatechange.png";
 import newsImg3 from "../assets/economy.png";
 import newsImg4 from "../assets/indianworldcup.png";
 
-const stories = [
-  {
-    title: "AI Revolutionizes Healthcare Diagnostics",
-    desc: "New algorithms are cutting detection times for rare diseases by over 60%.",
-    img: newsImg1,
-    category: "Technology",
-  },
-  {
-    title: "Stock Markets See Record Highs",
-    desc: "Investors celebrate as tech and energy stocks fuel global market optimism.",
-    img: newsImg2,
-    category: "Economy",
-  },
-  {
-    title: "India to Host Global Climate Summit 2025",
-    desc: "World leaders to gather in New Delhi to address rising temperature targets.",
-    img: newsImg3,
-    category: "World",
-  },
-  {
-    title: "Space Tourism Gets a Boost",
-    desc: "Private companies announce new orbital missions open to civilian travelers.",
-    img: newsImg4,
-    category: "Technology",
-  },
-];
-
 export default function TopStories() {
   const [swiper, setSwiper] = useState(null);
+  const [stories, setStories] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchTopStories();
+  }, []);
+
+  const fetchTopStories = async () => {
+    try {
+      const news = await NewsService.getAllNews();
+      
+      if (news && news.length > 0) {
+        // Take 4-6 articles for carousel
+        const topStories = news.slice(0, 4).map((article, index) => ({
+          title: article.title,
+          desc: article.description || "Read the full story for more details...",
+          img: article.urlToImage,
+          category: article.source?.name || "News",
+          url: article.url,
+          fallbackImg: [newsImg1, newsImg2, newsImg3, newsImg4][index % 4]
+        }));
+        
+        setStories(topStories);
+      }
+    } catch (error) {
+      console.error("Error fetching top stories:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <Box sx={{ mb: 3, textAlign: 'center', p: 2 }}>
+        <Typography sx={{ fontSize: '0.8rem', color: '#666' }}>
+          Loading stories...
+        </Typography>
+      </Box>
+    );
+  }
+
+  if (!stories.length) {
+    return null;
+  }
 
   return (
     <Box sx={{ mb: 3 }}>
-      {/* Header */}
+      {/* Header - Same design */}
       <Typography
         variant="h6"
         sx={{
@@ -62,7 +81,7 @@ export default function TopStories() {
         Top Stories
       </Typography>
 
-      {/* Swiper Carousel */}
+      {/* Swiper Carousel - Same design */}
       <Box
         sx={{
           background: "#ffffff",
@@ -111,6 +130,7 @@ export default function TopStories() {
                     },
                   },
                 }}
+                onClick={() => story.url && window.open(story.url, '_blank')}
               >
                 {/* Image */}
                 <Box
@@ -126,7 +146,7 @@ export default function TopStories() {
                     sx={{
                       width: "100%",
                       height: "100%",
-                      backgroundImage: `url(${story.img})`,
+                      backgroundImage: `url(${story.img || story.fallbackImg})`,
                       backgroundSize: "cover",
                       backgroundPosition: "center",
                       transition: "transform 0.5s ease",
@@ -165,6 +185,10 @@ export default function TopStories() {
                       lineHeight: 1.3,
                       mb: 0.8,
                       fontFamily: "'Georgia', 'Garamond', serif",
+                      display: "-webkit-box",
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: "vertical",
+                      overflow: "hidden",
                     }}
                   >
                     {story.title}
@@ -177,6 +201,10 @@ export default function TopStories() {
                       color: "#666666",
                       lineHeight: 1.4,
                       fontFamily: "'Georgia', 'Garamond', serif",
+                      display: "-webkit-box",
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: "vertical",
+                      overflow: "hidden",
                     }}
                   >
                     {story.desc}
@@ -187,7 +215,7 @@ export default function TopStories() {
           ))}
         </Swiper>
 
-        {/* Custom Navigation Buttons */}
+        {/* Custom Navigation Buttons - Same design */}
         <Box
           className="swiper-button-prev"
           sx={{
@@ -196,7 +224,7 @@ export default function TopStories() {
             top: "40%",
             zIndex: 10,
             cursor: "pointer",
-            background: 0,
+            background: "rgba(255,255,255,0.9)",
             width: "30px",
             height: "30px",
             borderRadius: "50%",
@@ -223,7 +251,7 @@ export default function TopStories() {
             top: "40%",
             zIndex: 10,
             cursor: "pointer",
-            background: 0,
+            background: "rgba(255,255,255,0.9)",
             width: "30px",
             height: "30px",
             borderRadius: "50%",
@@ -243,7 +271,7 @@ export default function TopStories() {
           }}
         />
 
-        {/* Pagination Dots */}
+        {/* Pagination Dots - Same design */}
         <Box
           sx={{
             ".swiper-pagination": {

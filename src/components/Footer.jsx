@@ -7,17 +7,18 @@ export default function Footer() {
     <Box
       component="footer"
       sx={{
-        background: "#1a1a1a",
+        background: "linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%)",
         color: "#ffffff",
-        mt: 6,
-        pt: 4,
-        pb: 3,
+        mt: 4,
+        pt: 3,
+        pb: 2,
+        borderTop: "3px solid #c41e3a",
       }}
     >
       {/* Main Footer Content */}
       <Box
         sx={{
-          maxWidth: "1300px",
+          maxWidth: "1400px",
           mx: "auto",
           px: 3,
           display: "grid",
@@ -26,58 +27,67 @@ export default function Footer() {
             sm: "1fr 1fr",
             md: "2fr 1fr 1fr 1fr",
           },
-          gap: 4,
-          mb: 3,
+          gap: 3,
+          mb: 2,
         }}
       >
         {/* About Section */}
         <Box>
           <Typography
-            variant="h4"
+            variant="h5"
             sx={{
               fontWeight: 900,
-              fontSize: "2rem",
-              mb: 2,
-              fontFamily: "'Georgia', 'Garamond', serif",
-              letterSpacing: "2px",
+              fontSize: "1.5rem",
+              mb: 1.5,
+              fontFamily: "'Georgia', serif",
+              letterSpacing: "3px",
+              display: "flex",
+              gap: "4px",
             }}
           >
-            <Box component="span" sx={{ color: "#dc2626" }}>M</Box>
-            <Box component="span" sx={{ color: "#dc2626" }}>I</Box>
-            <Box component="span" sx={{ color: "#dc2626" }}>D</Box>
+            <Box component="span" sx={{ color: "#c41e3a" }}>M</Box>
+            <Box component="span" sx={{ color: "#c41e3a" }}>I</Box>
+            <Box component="span" sx={{ color: "#c41e3a" }}>D</Box>
+            <Box component="span" sx={{ ml: 1, color: "#ffffff" }}>NEWS</Box>
           </Typography>
           <Typography
             sx={{
-              fontSize: "0.85rem",
+              fontSize: "0.8rem",
               color: "#cccccc",
-              lineHeight: 1.6,
-              mb: 2,
+              lineHeight: 1.5,
+              mb: 1.5,
             }}
           >
-            Your trusted source for breaking news, in-depth analysis, and
-            stories that matter. Committed to truth and integrity since 2025.
+            Your trusted source for breaking news, in-depth analysis, and stories that matter. Committed to truth and integrity since 2025.
           </Typography>
-          <Box sx={{ display: "flex", gap: 2 }}>
-            {["📘", "🐦", "📸", "▶️"].map((emoji, idx) => (
+          <Box sx={{ display: "flex", gap: 1.5 }}>
+            {[
+              { emoji: "📘", label: "Facebook" },
+              { emoji: "🐦", label: "Twitter" },
+              { emoji: "📸", label: "Instagram" },
+              { emoji: "▶️", label: "YouTube" }
+            ].map((social, idx) => (
               <Box
                 key={idx}
                 sx={{
-                  width: "35px",
-                  height: "35px",
+                  width: "32px",
+                  height: "32px",
                   borderRadius: "50%",
                   background: "#2a2a2a",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                   cursor: "pointer",
-                  transition: "all 0.3s ease",
+                  fontSize: "16px",
+                  transition: "all 0.2s ease",
                   "&:hover": {
-                    background: "#dc2626",
-                    transform: "translateY(-3px)",
+                    background: "#c41e3a",
+                    transform: "translateY(-2px)",
                   },
                 }}
+                title={social.label}
               >
-                {emoji}
+                {social.emoji}
               </Box>
             ))}
           </Box>
@@ -87,12 +97,13 @@ export default function Footer() {
         <Box>
           <Typography
             sx={{
-              fontWeight: 900,
-              fontSize: "0.9rem",
-              mb: 2,
+              fontWeight: 700,
+              fontSize: "0.85rem",
+              mb: 1.5,
               textTransform: "uppercase",
               letterSpacing: "1px",
-              fontFamily: "'Georgia', 'Garamond', serif",
+              fontFamily: "'Segoe UI', sans-serif",
+              color: "#ffffff",
             }}
           >
             Sections
@@ -104,13 +115,14 @@ export default function Footer() {
               to={`/${item.toLowerCase()}`}
               sx={{
                 display: "block",
-                fontSize: "0.85rem",
-                color: "#cccccc",
-                mb: 1.5,
+                fontSize: "0.8rem",
+                color: "#b0b0b0",
+                mb: 1,
                 textDecoration: "none",
-                transition: "color 0.2s ease",
+                transition: "all 0.2s ease",
                 "&:hover": {
-                  color: "#dc2626",
+                  color: "#c41e3a",
+                  paddingLeft: "4px",
                 },
               }}
             >
@@ -123,12 +135,13 @@ export default function Footer() {
         <Box>
           <Typography
             sx={{
-              fontWeight: 900,
-              fontSize: "0.9rem",
-              mb: 2,
+              fontWeight: 700,
+              fontSize: "0.85rem",
+              mb: 1.5,
               textTransform: "uppercase",
               letterSpacing: "1px",
-              fontFamily: "'Georgia', 'Garamond', serif",
+              fontFamily: "'Segoe UI', sans-serif",
+              color: "#ffffff",
             }}
           >
             Company
@@ -138,13 +151,14 @@ export default function Footer() {
               key={item}
               sx={{
                 display: "block",
-                fontSize: "0.85rem",
-                color: "#cccccc",
-                mb: 1.5,
+                fontSize: "0.8rem",
+                color: "#b0b0b0",
+                mb: 1,
                 cursor: "pointer",
-                transition: "color 0.2s ease",
+                transition: "all 0.2s ease",
                 "&:hover": {
-                  color: "#dc2626",
+                  color: "#c41e3a",
+                  paddingLeft: "4px",
                 },
               }}
             >
@@ -157,22 +171,23 @@ export default function Footer() {
         <Box>
           <Typography
             sx={{
-              fontWeight: 900,
-              fontSize: "0.9rem",
-              mb: 2,
+              fontWeight: 700,
+              fontSize: "0.85rem",
+              mb: 1.5,
               textTransform: "uppercase",
               letterSpacing: "1px",
-              fontFamily: "'Georgia', 'Garamond', serif",
+              fontFamily: "'Segoe UI', sans-serif",
+              color: "#ffffff",
             }}
           >
             Newsletter
           </Typography>
           <Typography
             sx={{
-              fontSize: "0.85rem",
-              color: "#cccccc",
-              mb: 2,
-              lineHeight: 1.5,
+              fontSize: "0.8rem",
+              color: "#b0b0b0",
+              mb: 1.5,
+              lineHeight: 1.4,
             }}
           >
             Get the latest news delivered to your inbox daily.
@@ -181,7 +196,7 @@ export default function Footer() {
             component="form"
             sx={{
               display: "flex",
-              gap: 1,
+              gap: 0.5,
             }}
           >
             <input
@@ -189,28 +204,33 @@ export default function Footer() {
               placeholder="Enter your email"
               style={{
                 flex: 1,
-                padding: "10px 12px",
+                padding: "8px 10px",
                 border: "1px solid #444444",
-                borderRadius: "4px",
+                borderRadius: "3px",
                 background: "#2a2a2a",
                 color: "#ffffff",
-                fontSize: "0.85rem",
+                fontSize: "0.8rem",
                 outline: "none",
+                transition: "border-color 0.2s",
               }}
+              onFocus={(e) => e.target.style.borderColor = "#c41e3a"}
+              onBlur={(e) => e.target.style.borderColor = "#444444"}
             />
             <button
               type="submit"
               style={{
-                padding: "10px 16px",
-                background: "#dc2626",
+                padding: "8px 14px",
+                background: "#c41e3a",
                 color: "#ffffff",
                 border: "none",
-                borderRadius: "4px",
+                borderRadius: "3px",
                 fontWeight: "700",
                 fontSize: "0.85rem",
                 cursor: "pointer",
-                transition: "background 0.3s ease",
+                transition: "background 0.2s ease",
               }}
+              onMouseEnter={(e) => e.target.style.background = "#a31828"}
+              onMouseLeave={(e) => e.target.style.background = "#c41e3a"}
             >
               →
             </button>
@@ -222,8 +242,8 @@ export default function Footer() {
       <Box
         sx={{
           borderTop: "1px solid #333333",
-          pt: 3,
-          maxWidth: "1300px",
+          pt: 2,
+          maxWidth: "1400px",
           mx: "auto",
           px: 3,
         }}
@@ -234,28 +254,28 @@ export default function Footer() {
             flexDirection: { xs: "column", sm: "row" },
             justifyContent: "space-between",
             alignItems: "center",
-            gap: 2,
+            gap: 1.5,
           }}
         >
           <Typography
             sx={{
-              fontSize: "0.8rem",
-              color: "#999999",
+              fontSize: "0.75rem",
+              color: "#888888",
             }}
           >
             © 2025 MID News. All rights reserved.
           </Typography>
-          <Box sx={{ display: "flex", gap: 3 }}>
+          <Box sx={{ display: "flex", gap: 2 }}>
             {["Terms", "Privacy", "Cookies"].map((item) => (
               <Typography
                 key={item}
                 sx={{
-                  fontSize: "0.8rem",
-                  color: "#999999",
+                  fontSize: "0.75rem",
+                  color: "#888888",
                   cursor: "pointer",
                   transition: "color 0.2s ease",
                   "&:hover": {
-                    color: "#ffffff",
+                    color: "#c41e3a",
                   },
                 }}
               >

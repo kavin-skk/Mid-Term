@@ -1,37 +1,41 @@
-import Box from "@mui/material/Box";
-
-const categoryColors = {
-  Politics: { bg: "#dc2626", text: "#ffffff" },
-  Economy: { bg: "#16a34a", text: "#ffffff" },
-  Sports: { bg: "#0284c7", text: "#ffffff" },
-  Technology: { bg: "#7c3aed", text: "#ffffff" },
-  Entertainment: { bg: "#d946ef", text: "#ffffff" },
-  World: { bg: "#dc2626", text: "#ffffff" },
-  Breaking: { bg: "#dc2626", text: "#ffffff" },
-  Trending: { bg: "#f59e0b", text: "#ffffff" },
-};
+import Chip from "@mui/material/Chip";
+import VerifiedIcon from "@mui/icons-material/Verified";
 
 export default function CategoryBadge({ category }) {
-  const colors = categoryColors[category] || { bg: "#6b7280", text: "#ffffff" };
+  // Check if user is subscribed to this category
+  const isSubscribed = () => {
+    try {
+      const storedUser = sessionStorage.getItem("user");
+      if (storedUser) {
+        const user = JSON.parse(storedUser);
+        if (user.subscription && user.subscription.categories) {
+          // Convert category to lowercase and check if it's in the subscribed list
+          return user.subscription.categories.includes(category.toLowerCase());
+        }
+      }
+    } catch (error) {
+      console.error("Error checking subscription:", error);
+    }
+    return false;
+  };
+
+  const subscribed = isSubscribed();
 
   return (
-    <Box
-      component="span"
+    <Chip
+      icon={subscribed ? <VerifiedIcon sx={{ fontSize: "0.9rem" }} /> : null}
+      label={category}
+      size="small"
       sx={{
-        display: "inline-block",
-        background: colors.bg,
-        color: colors.text,
-        px: 1.5,
-        py: 0.3,
-        fontSize: "0.7rem",
-        fontWeight: 900,
+        background: subscribed ? "#16a34a" : "#e8e8e8",
+        color: subscribed ? "#ffffff" : "#666666",
+        fontWeight: 700,
+        fontSize: "0.65rem",
+        height: "22px",
         textTransform: "uppercase",
         letterSpacing: "0.5px",
-        borderRadius: "0px",
-        fontFamily: "'Georgia', 'Garamond', serif",
+        border: subscribed ? "1px solid #16a34a" : "1px solid #e8e8e8",
       }}
-    >
-      {category}
-    </Box>
+    />
   );
 }

@@ -1,8 +1,11 @@
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
+import { toast, ToastContainer } from "react-toastify";
 import Footer from "./components/Footer";
 import Typography from "@mui/material/Typography";
 import Navbar from "./components/Navbar";
+import SocialFeed from "./components/SocialFeed";
+import UserProfile from "./components/UserProfile";
 import BreakingNewsSection from "./components/BreakingNewsSection";
 import LatestHeadlines from "./components/LatestHeadlines";
 import SidebarAdBanner from "./components/SidebarAdBanner";
@@ -16,14 +19,16 @@ import TopStories from "./components/TopStories";
 import LeftColumnAd from "./components/LeftColumnAd";
 import StateUpdates from "./components/StateUpdates";
 import AdBanner from "./components/AdBanner";
+import PopularTags from "./components/PopularTags";
+import FactOfTheDay from "./components/FactOfTheDay";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import SubscriptionPlans from "./pages/SubscriptionPlans";
 import SubscriptionForm from "./pages/SubscriptionForm";
 import GoogleSignIn from "./components/GoogleSignIn";
 import TrendingVideos from "./components/TrendingVideos";
-import OpinionAnalysis from "./components/OpinionAnalysis";
+import OpinionAnalysis from "./components/MustReadToday";
 import QuickRead from "./components/QuickRead";
-
+import PhotoStories from "./components/PhotoStories";
 
 
 function MainPageContent() {
@@ -84,7 +89,8 @@ function MainPageContent() {
               <TrendingNews />
               <TrendingVideos />
               <LeftColumnAd />
-            
+              <PopularTags />
+
             </div>
 
             {/* 🔹 CENTER COLUMN - Exactly 64% */}
@@ -94,10 +100,12 @@ function MainPageContent() {
                 flex: "1",
                 display: "flex",
                 flexDirection: "column",
+
               }}
             >
               <BreakingNewsSection />
-              <OpinionAnalysis />
+              
+              <FactOfTheDay />
             </div>
 <Box sx={{ height: "40px" }} />
             {/* 🔸 RIGHT COLUMN - Exactly 18% */}
@@ -116,6 +124,7 @@ function MainPageContent() {
               <LatestTimeline />
               <TopStories />
               <QuickRead />
+              <SocialFeed />
             </div>
           </div>
         </main>
@@ -161,7 +170,7 @@ function MainPageContent() {
         >
           <StateUpdates />
         </Box>
-
+          
         {/* Footer */}
         <Box
           sx={{

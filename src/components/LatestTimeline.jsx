@@ -1,29 +1,73 @@
+import { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import NewsService from "../services/NewsService";
 
 export default function LatestTimeline() {
-  const timelineData = [
-    {
-      time: "5:30 PM",
-      title: "RBI announces new digital currency regulation",
-      desc: "The new framework aims to ensure safer transactions across fintech platforms.",
-    },
-    {
-      time: "4:45 PM",
-      title: "Sensex jumps 250 points amid global rally",
-      desc: "Investor sentiment improved after positive cues from Asian markets.",
-    },
-    {
-      time: "4:00 PM",
-      title: "ISRO prepares for Chandrayaan-4 mission",
-      desc: "Final testing begins as India plans a new lunar surface study in 2026.",
-    },
-  ];
+  const [timelineData, setTimelineData] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchTimelineNews();
+  }, []);
+
+  const fetchTimelineNews = async () => {
+    try {
+      const news = await NewsService.getAllNews();
+      
+      if (news && news.length > 0) {
+        // Take first 3 articles and format them for timeline
+        const timeline = news.slice(0, 3).map((article) => ({
+          time: formatTime(article.publishedAt),
+          title: article.title,
+          desc: article.description || "Click to read the full story...",
+          url: article.url,
+        }));
+        
+        setTimelineData(timeline);
+      }
+    } catch (error) {
+      console.error("Error fetching timeline:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const formatTime = (dateString) => {
+    if (!dateString) return "Just now";
+    
+    try {
+      const date = new Date(dateString);
+      const hours = date.getHours();
+      const minutes = date.getMinutes();
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      const formattedHours = hours % 12 || 12;
+      const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+      
+      return `${formattedHours}:${formattedMinutes} ${ampm}`;
+    } catch {
+      return "Recently";
+    }
+  };
+
+  if (loading) {
+    return (
+      <Box sx={{ mb: 3, textAlign: 'center', py: 2 }}>
+        <Typography sx={{ fontSize: '0.8rem', color: '#666' }}>
+          Loading timeline...
+        </Typography>
+      </Box>
+    );
+  }
+
+  if (!timelineData.length) {
+    return null;
+  }
 
   return (
     <Box sx={{ mb: 3 }}>
-      {/* Section Header */}
+      {/* Section Header - EXACT SAME */}
       <Box sx={{ mb: 1.5 }}>
         <Typography
           variant="h6"
@@ -49,7 +93,7 @@ export default function LatestTimeline() {
         />
       </Box>
 
-      {/* Timeline Container */}
+      {/* Timeline Container - EXACT SAME */}
       <Box
         sx={{
           background: "#ffffff",
@@ -75,6 +119,7 @@ export default function LatestTimeline() {
                 pl: 2.3,
               },
             }}
+            onClick={() => item.url && window.open(item.url, '_blank')}
           >
             {/* Time Badge */}
             <Box
@@ -112,6 +157,10 @@ export default function LatestTimeline() {
                 mb: 0.5,
                 lineHeight: 1.3,
                 fontFamily: "'Georgia', 'Garamond', serif",
+                display: "-webkit-box",
+                WebkitLineClamp: 2,
+                WebkitBoxOrient: "vertical",
+                overflow: "hidden",
               }}
             >
               {item.title}
@@ -124,6 +173,10 @@ export default function LatestTimeline() {
                 color: "#666666",
                 lineHeight: 1.5,
                 fontFamily: "'Georgia', 'Garamond', serif",
+                display: "-webkit-box",
+                WebkitLineClamp: 2,
+                WebkitBoxOrient: "vertical",
+                overflow: "hidden",
               }}
             >
               {item.desc}

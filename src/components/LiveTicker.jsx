@@ -26,59 +26,61 @@ export default function LiveTicker() {
 
         .ticker-container {
           position: fixed;
-          top: 120px;
+          top: 104px;
           left: 0;
           width: 100%;
-          height: 40px;
-          background: linear-gradient(90deg, #dc2626 0%, #991b1b 100%);
+          height: 36px;
+          background: linear-gradient(135deg, #c41e3a 0%, #a31828 100%);
           display: flex;
           align-items: center;
           padding: 0;
           margin: 0;
           overflow: hidden;
-          border-bottom: 3px solid #ffffff;
-          z-index: 1100;
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+          border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+          z-index: 999;
+          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
         }
 
         .ticker-label {
           display: flex;
           align-items: center;
-          gap: 8px;
-          padding: 0 20px;
+          gap: 6px;
+          padding: 0 16px;
           background: rgba(255, 255, 255, 0.15);
           flex-shrink: 0;
           height: 100%;
-          border-right: 2px solid rgba(255, 255, 255, 0.3);
+          border-right: 1px solid rgba(255, 255, 255, 0.25);
           min-width: fit-content;
         }
 
         .ticker-dot {
-          width: 10px;
-          height: 10px;
+          width: 8px;
+          height: 8px;
           background: #ffffff;
           border-radius: 50%;
-          animation: pulse 1.5s infinite;
+          animation: pulse 1.5s ease-in-out infinite;
         }
 
         @keyframes pulse {
           0%, 100% { 
             opacity: 1;
             transform: scale(1);
+            box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
           }
           50% { 
-            opacity: 0.6;
-            transform: scale(1.2);
+            opacity: 0.7;
+            transform: scale(1.1);
+            box-shadow: 0 0 0 4px rgba(255, 255, 255, 0);
           }
         }
 
         .ticker-label-text {
           color: #ffffff;
-          font-weight: 900;
-          font-size: 0.8rem;
-          letter-spacing: 2px;
+          font-weight: 700;
+          font-size: 0.7rem;
+          letter-spacing: 1.5px;
           text-transform: uppercase;
-          font-family: 'Georgia', 'Garamond', serif;
+          font-family: 'Segoe UI', sans-serif;
           white-space: nowrap;
         }
 
@@ -93,51 +95,68 @@ export default function LiveTicker() {
         .ticker-text {
           display: flex;
           white-space: nowrap;
-          animation: ticker-scroll 100s linear infinite;
-          font-size: 15px;
-          font-weight: 600;
+          animation: ticker-scroll 80s linear infinite;
+          font-size: 14px;
+          font-weight: 500;
           color: #ffffff;
-          padding: 0 20px;
-          font-family: 'Georgia', 'Garamond', serif;
+          padding: 0;
+          font-family: 'Segoe UI', sans-serif;
           align-items: center;
-          gap: 3rem;
+          gap: 0;
         }
 
         .ticker-item {
-          display: inline-block;
+          display: inline-flex;
+          align-items: center;
           min-width: max-content;
-          padding: 0 2rem;
-          border-right: 2px solid rgba(255, 255, 255, 0.3);
+          padding: 0 32px;
+          border-right: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .ticker-item:last-child {
-          border-right: none;
+          border-right: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* Hover pause effect */
+        .ticker-text:hover {
+          animation-play-state: paused;
         }
 
         /* Mobile responsive */
         @media (max-width: 768px) {
           .ticker-container {
-            top: 110px;
-            height: 45px;
+            top: 60px;
+            height: 32px;
           }
 
           .ticker-label {
             padding: 0 12px;
+            gap: 4px;
+          }
+
+          .ticker-dot {
+            width: 6px;
+            height: 6px;
           }
 
           .ticker-label-text {
-            font-size: 0.7rem;
-            letter-spacing: 1.5px;
+            font-size: 0.65rem;
+            letter-spacing: 1px;
           }
 
           .ticker-text {
-            font-size: 13px;
+            font-size: 12px;
+            animation: ticker-scroll 60s linear infinite;
+          }
+
+          .ticker-item {
+            padding: 0 20px;
           }
         }
       `}</style>
 
       <div className="ticker-container">
-        {/* LIVE Badge */}
+        {/* LIVE Badge - Compact */}
         <div className="ticker-label">
           <div className="ticker-dot"></div>
           <div className="ticker-label-text">Live</div>

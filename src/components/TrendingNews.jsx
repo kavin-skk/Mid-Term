@@ -1,44 +1,63 @@
+import { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import NewsService from "../services/NewsService";
 
+// Fallback images
 import newsImg1 from "../assets/economy.png";
 import newsImg2 from "../assets/AI.png";
 import newsImg3 from "../assets/climatechange.png";
 import newsImg4 from "../assets/indianworldcup.png";
 import newsImg5 from "../assets/supremecourt.png";
 
-const trendingData = [
-  {
-    title: "Global Markets See Mixed Reaction to Rate Cut",
-    count: "1245",
-    img: newsImg1,
-  },
-  {
-    title: "PM Announces New Green Energy Initiative",
-    count: "892",
-    img: newsImg2,
-  },
-  {
-    title: "Tech Giants Face Fresh Data Privacy Scrutiny",
-    count: "756",
-    img: newsImg3,
-  },
-  {
-    title: "Cricket World Cup: India Secures Dominant Win",
-    count: "623",
-    img: newsImg4,
-  },
-  {
-    title: "Oil Prices Surge Amid Middle East Tensions",
-    count: "541",
-    img: newsImg5,
-  },
-];
-
 export default function TrendingSection() {
+  const [trendingData, setTrendingData] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchTrendingNews();
+  }, []);
+
+  const fetchTrendingNews = async () => {
+    try {
+      const news = await NewsService.getAllNews();
+      
+      if (news && news.length > 0) {
+        // Take first 5 articles for trending
+        const trending = news.slice(0, 5).map((article, index) => ({
+          title: article.title,
+          count: Math.floor(Math.random() * 1000 + 500), // Random view count
+          img: article.urlToImage,
+          url: article.url,
+          fallbackImg: [newsImg1, newsImg2, newsImg3, newsImg4, newsImg5][index]
+        }));
+        
+        setTrendingData(trending);
+      }
+    } catch (error) {
+      console.error("Error fetching trending news:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <Box sx={{ mb: 3, textAlign: 'center', p: 2 }}>
+        <Typography sx={{ fontSize: '0.85rem', color: '#666' }}>
+          Loading trending...
+        </Typography>
+      </Box>
+    );
+  }
+
+  if (!trendingData.length) {
+    return null;
+  }
+
   return (
     <Box sx={{ mb: 3 }}>
-      {/* Header with Fire */}
+      {/* Header with Fire - Same design */}
       <Box sx={{ position: "relative", mb: 1.5 }}>
         <Typography
           variant="h6"
@@ -68,7 +87,7 @@ export default function TrendingSection() {
         </Box>
       </Box>
 
-      {/* Trending Items with Images */}
+      {/* Trending Items with Images - Same design */}
       <Box
         sx={{
           background: "#ffffff",
@@ -92,6 +111,7 @@ export default function TrendingSection() {
                 background: "#fafafa",
               },
             }}
+            onClick={() => item.url && window.open(item.url, '_blank')}
           >
             {/* Thumbnail Image */}
             <Box
@@ -105,12 +125,15 @@ export default function TrendingSection() {
               }}
             >
               <img
-                src={item.img}
+                src={item.img || item.fallbackImg}
                 alt={item.title}
                 style={{
                   width: "100%",
                   height: "100%",
                   objectFit: "cover",
+                }}
+                onError={(e) => {
+                  e.target.src = item.fallbackImg;
                 }}
               />
             </Box>
