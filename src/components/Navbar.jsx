@@ -8,6 +8,7 @@ import Button from "@mui/material/Button";
 import Drawer from "@mui/material/Drawer";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
+import RegionalDropdown from "./RegionalDropdown";
 import Avatar from "@mui/material/Avatar";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
@@ -19,7 +20,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import LogoutIcon from "@mui/icons-material/Logout";
 import VerifiedIcon from "@mui/icons-material/Verified";
-import StarIcon from "@mui/icons-material/Star";
+import NotificationsIcon from '@mui/icons-material/Notifications';
 import UpgradeIcon from "@mui/icons-material/Upgrade";
 
 export default function Navbar() {
@@ -30,6 +31,9 @@ export default function Navbar() {
   const [anchorEl, setAnchorEl] = useState(null);
   const navigate = useNavigate();
   const open = Boolean(anchorEl);
+  const [regionalAnchorEl, setRegionalAnchorEl] = useState(null);
+  const regionalOpen = Boolean(regionalAnchorEl);
+
 
   useEffect(() => {
     const storedUser = sessionStorage.getItem("user");
@@ -89,14 +93,19 @@ export default function Navbar() {
     handleClose();
     navigate("/plans");
   };
+  const handleRegionalClick = (event) => {
+  setRegionalAnchorEl(event.currentTarget);
+};
+
+  const handleRegionalClose = () => {
+    setRegionalAnchorEl(null);
+  };
 
   const menuItems = [
     "Home",
-    "Regional",
-    "World",
+    "Region",
     "Politics",
-    "Defense",
-    "Economy",
+    "Defense", "Finance",
     "Entertainment",
     "Sports",
     "Translate",
@@ -184,187 +193,413 @@ export default function Navbar() {
             <Box component="span" sx={{ background: "#c41e3a", color: "#ffffff", padding: "2px 12px", fontWeight: 700 }}>D</Box>
           </Typography>
 
-          <Stack direction="row" spacing={1} alignItems="center">
-            <Button
-              variant="contained"
-              sx={{
-                backgroundColor: "#c41e3a",
-                color: "#ffffff",
-                fontWeight: 700,
-                textTransform: "uppercase",
-                letterSpacing: "0.5px",
-                fontSize: "0.75rem",
-                borderRadius: "3px",
-                px: 2,
-                py: 0.75,
-                minHeight: "36px",
-                fontFamily: "'Segoe UI', sans-serif",
-                "&:hover": {
-                  backgroundColor: "#a31828",
-                  transform: "translateY(-1px)",
-                  boxShadow: "0 4px 8px rgba(196,30,58,0.3)",
-                },
-                transition: "all 0.2s",
-              }}
-              onClick={() => navigate("/plans")}
-            >
-              Subscribe
-            </Button>
+{/* RIGHT: Subscribe + Sign In/Profile */}
+<Stack direction="row" spacing={1} alignItems="center">
+  <Button
+    variant="contained"
+    sx={{
+      backgroundColor: "#c41e3a",
+      color: "#ffffff",
+      fontWeight: 700,
+      textTransform: "uppercase",
+      letterSpacing: "0.5px",
+      fontSize: "0.75rem",
+      borderRadius: "3px",
+      px: 2,
+      py: 0.75,
+      minHeight: "36px",
+      fontFamily: "'Segoe UI', sans-serif",
+      "&:hover": {
+        backgroundColor: "#a31828",
+        transform: "translateY(-1px)",
+        boxShadow: "0 4px 8px rgba(196,30,58,0.3)",
+      },
+      transition: "all 0.2s",
+    }}
+    onClick={() => navigate("/plans")}
+  >
+    Subscribe
+  </Button>
 
-            <IconButton onClick={handleProfileClick} sx={{ padding: 0 }}>
-              {user ? (
-                <Avatar
+  {/* Conditional: Show Sign In OR Profile Avatar */}
+  {!user ? (
+    /* SHOW SIGN IN BUTTON when NOT logged in */
+    <Button
+      variant="outlined"
+      sx={{
+        borderColor: "#c41e3a",
+        border: "2px solid #c41e3a",
+        color: "#c41e3a",
+        fontWeight: 700,
+        textTransform: "uppercase",
+        letterSpacing: "0.5px",
+        fontSize: "0.75rem",
+        borderRadius: "3px",
+        px: 2,
+        py: 0.75,
+        minHeight: "36px",
+        fontFamily: "'Segoe UI', sans-serif",
+        "&:hover": {
+          borderColor: "#a31828",
+          backgroundColor: "#fef2f2",
+          color: "#a31828",
+          transform: "translateY(-1px)",
+        },
+        transition: "all 0.2s",
+      }}
+      onClick={() => navigate("/signin")}
+    >
+      Sign In
+    </Button>
+  ) : (
+    /* SHOW PROFILE AVATAR when logged in */
+    <IconButton onClick={handleProfileClick} sx={{ padding: 0 }}>
+      <Avatar
+        sx={{
+          width: 40,
+          height: 40,
+          background: "linear-gradient(135deg, #c41e3a 0%, #a31828 100%)",
+          fontSize: "1rem",
+          fontWeight: 900,
+          cursor: "pointer",
+          border: user.subscription ? "2px solid #16a34a" : "2px solid #e8e8e8",
+        }}
+      >
+        {user.name ? user.name.charAt(0).toUpperCase() : "U"}
+      </Avatar>
+    </IconButton>
+  )}
+</Stack>
+
+        </Toolbar>
+
+{/* SECONDARY MENU - Compact Categories with Subscription Indicators */}
+<Toolbar
+  variant="dense"
+  sx={{
+    justifyContent: "center",
+    gap: 0,
+    overflowX: "auto",
+    background: "#ffffff",
+    borderTop: "1px solid #e0e0e0",
+    display: { xs: "none", md: "flex" },
+    minHeight: "44px !important",
+    px: 0,
+    "&::-webkit-scrollbar": { display: "none" },
+  }}
+>
+{menuItems.map((link, index) => {
+  const isSubscribed = user && user.subscriptionType && 
+                   user.subscriptionType.split(',')
+                     .map(cat => cat.trim().toLowerCase())
+                     .includes(link.toLowerCase());
+
+  return (
+    <Button
+      key={link}
+      onClick={link === "Region" ? handleRegionalClick : undefined}
+      sx={{
+        color: isSubscribed ? "#a31616ff" : "#4a4a4a",
+        fontWeight: isSubscribed ? 700 : 600,
+        fontSize: "0.875rem",
+        textTransform: "none",
+        fontFamily: "'Segoe UI', sans-serif",
+        px: 2,
+        py: 1,
+        minWidth: "auto",
+        borderRadius: "0px",
+        borderRight: index < menuItems.length - 1 ? "1px solid #f0f0f0" : "none",
+        position: "relative",
+        background: isSubscribed ? "rgba(22, 163, 74, 0.05)" : 
+                   (link === "Region" && regionalOpen ? "rgba(196, 30, 58, 0.08)" : "transparent"),
+        "&:hover": {
+          backgroundColor: "#c41e3a",
+          color: "#ffffff",
+          borderRight: index < menuItems.length - 1 ? "1px solid #c41e3a" : "none",
+        },
+        transition: "all 0.2s",
+        display: "flex",
+        alignItems: "center",
+        gap: 0.5,
+      }}
+    >
+      {isSubscribed && (
+        <NotificationsIcon 
+          sx={{ 
+            fontSize: "0.9rem", 
+            color: "#e6e209ff",
+            animation: "pulse 2s infinite",
+          }} 
+        />
+      )}
+      {link}
+    </Button>
+  );
+})}
+
+</Toolbar>
+
+{/* Add pulse animation */}
+<style>
+  {`
+    @keyframes pulse {
+      0%, 100% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0.5;
+      }
+    }
+  `}
+</style>
+
+      </AppBar>
+      <RegionalDropdown 
+        anchorEl={regionalAnchorEl}
+        open={regionalOpen}
+        onClose={handleRegionalClose}
+      />
+<Menu
+  anchorEl={anchorEl}
+  open={open}
+  onClose={handleClose}
+  PaperProps={{
+    sx: {
+      mt: 1,
+      minWidth: 350,
+      maxWidth: 400,
+      borderRadius: "8px",
+      border: "2px solid #c41e3a",
+      boxShadow: "0 8px 20px rgba(196, 30, 58, 0.2)",
+      background: "#fffbf5",
+    },
+  }}
+  transformOrigin={{ horizontal: "right", vertical: "top" }}
+  anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+>
+  {/* User Info Header */}
+  <Box 
+    sx={{ 
+      p: 2.5, 
+      borderBottom: "2px solid #c41e3a",
+      background: "linear-gradient(135deg, #fff8e7 0%, #fafafaff 100%)",
+    }}
+  >
+    <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 1.5 }}>
+      <Avatar
+        sx={{
+          width: 60,
+          height: 60,
+          background: "linear-gradient(135deg, #c41e3a 0%, #a31828 100%)",
+          fontSize: "1.5rem",
+          fontWeight: 900,
+          border: "3px solid #ffffff",
+          boxShadow: "0 2px 8px rgba(196, 30, 58, 0.3)",
+        }}
+      >
+        {user && user.name ? user.name.charAt(0).toUpperCase() : "U"}
+      </Avatar>
+      <Box sx={{ flex: 1 }}>
+        <Typography sx={{ fontWeight: 800, fontSize: "1.15rem", color: "#1a1a1a", mb: 0.3 }}>
+          {user && user.name ? user.name : "User"}
+        </Typography>
+        <Typography sx={{ fontSize: "0.75rem", color: "#666666", mb: 0.5 }}>
+          {user && user.email ? user.email : ""}
+        </Typography>
+        {user && user.username && (
+          <Typography sx={{ fontSize: "0.7rem", color: "#888888", fontStyle: "italic" }}>
+            @{user.username}
+          </Typography>
+        )}
+      </Box>
+    </Stack>
+
+    {/* Subscription Badge - GREEN stays! */}
+    {(() => {
+      let subscriptionPlan = null;
+      if (user && user.subscriptionExpiries && user.createdAt) {
+        const createdDate = new Date(user.createdAt);
+        const firstExpiry = Object.values(user.subscriptionExpiries)[0];
+        if (firstExpiry) {
+          const expiryDate = new Date(firstExpiry);
+          const monthsDiff = (expiryDate - createdDate) / (1000 * 60 * 60 * 24 * 30);
+          subscriptionPlan = monthsDiff >= 11 ? "YEARLY" : "MONTHLY";
+        }
+      }
+
+      return user && user.subscriptionType ? (
+        <Chip
+          icon={<VerifiedIcon sx={{ fontSize: "0.9rem" }} />}
+          label={subscriptionPlan ? `${subscriptionPlan} MEMBER` : "PREMIUM MEMBER"}
+          sx={{ 
+            background: "#16a34a", 
+            color: "#ffffff", 
+            fontWeight: 800, 
+            fontSize: "0.7rem", 
+            height: "24px",
+            letterSpacing: "0.5px",
+          }}
+        />
+      ) : (
+        <Chip 
+          label="FREE USER" 
+          sx={{ 
+            background: "#e8e8e8", 
+            color: "#666666", 
+            fontWeight: 700, 
+            fontSize: "0.7rem", 
+            height: "24px",
+            letterSpacing: "0.5px",
+          }} 
+        />
+      );
+    })()}
+  </Box>
+
+  {/* Subscriptions Section - RED & WHITE THEME */}
+  {user && user.subscriptionType && (
+    <Box sx={{ p: 2, background: "#ffffff", borderBottom: "1px solid #f0f0f0" }}>
+      <Typography sx={{ 
+        fontSize: "0.85rem", 
+        fontWeight: 800, 
+        color: "#c41e3a", 
+        mb: 1, 
+        textTransform: "uppercase", 
+        letterSpacing: "0.5px" 
+      }}>
+        Your Subscriptions
+      </Typography>
+      <Box sx={{ display: "flex", flexDirection: "column", gap: 0.75 }}>
+        {user.subscriptionType.split(',').map((category, index) => {
+          const trimmedCategory = category.trim();
+          const expiryDate = user.subscriptionExpiries && user.subscriptionExpiries[trimmedCategory];
+          const isExpired = expiryDate && new Date(expiryDate) < new Date();
+          
+          return (
+            <Box
+              key={index}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                p: 1,
+                borderRadius: "6px",
+                background: isExpired 
+                  ? "rgba(220, 38, 38, 0.08)" 
+                  : "rgba(220, 38, 38, 0.04)", // Light red for active
+                border: `1.5px solid ${isExpired ? "rgba(220, 38, 38, 0.4)" : "rgba(220, 38, 38, 0.2)"}`,
+              }}
+            >
+              <Box sx={{ display: "flex", alignItems: "center", gap: 0.75 }}>
+                <Typography
                   sx={{
-                    width: 40,
-                    height: 40,
-                    background: "linear-gradient(135deg, #c41e3a 0%, #a31828 100%)",
-                    fontSize: "1rem",
-                    fontWeight: 900,
-                    cursor: "pointer",
-                    border: user.subscription ? "2px solid #16a34a" : "2px solid #e8e8e8",
+                    fontSize: "0.85rem",
+                    fontWeight: 700,
+                    color: isExpired ? "#991b1b" : "#c41e3a",
                   }}
                 >
-                  {user.name ? user.name.charAt(0).toUpperCase() : "U"}
-                </Avatar>
-              ) : (
-                <Avatar sx={{ width: 40, height: 40, background: "#e8e8e8", color: "#666666", cursor: "pointer" }}>
-                  <AccountCircleIcon />
-                </Avatar>
-              )}
-            </IconButton>
-          </Stack>
-        </Toolbar>
-
-        <Toolbar
-          variant="dense"
-          sx={{
-            justifyContent: "center",
-            gap: 0,
-            overflowX: "auto",
-            background: "#ffffff",
-            borderTop: "1px solid #e0e0e0",
-            display: { xs: "none", md: "flex" },
-            minHeight: "44px !important",
-            px: 0,
-            "&::-webkit-scrollbar": { display: "none" },
-          }}
-        >
-          {menuItems.map((link, index) => (
-            <Button
-              key={link}
-              sx={{
-                color: "#4a4a4a",
-                fontWeight: 600,
-                fontSize: "0.875rem",
-                textTransform: "none",
-                fontFamily: "'Segoe UI', sans-serif",
-                px: 2,
-                py: 1,
-                minWidth: "auto",
-                borderRadius: "0px",
-                borderRight: index < menuItems.length - 1 ? "1px solid #f0f0f0" : "none",
-                "&:hover": {
-                  backgroundColor: "#c41e3a",
-                  color: "#ffffff",
-                  borderRight: index < menuItems.length - 1 ? "1px solid #c41e3a" : "none",
-                },
-                transition: "all 0.2s",
-              }}
-            >
-              {link}
-            </Button>
-          ))}
-        </Toolbar>
-      </AppBar>
-
-      <Menu
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleClose}
-        PaperProps={{
-          sx: {
-            mt: 1,
-            minWidth: 300,
-            borderRadius: "8px",
-            border: "2px solid #c41e3a",
-            boxShadow: "0 8px 20px rgba(196, 30, 58, 0.15)",
-          },
-        }}
-        transformOrigin={{ horizontal: "right", vertical: "top" }}
-        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
-      >
-        <Box sx={{ p: 2.5, borderBottom: "1px solid #e8e8e8" }}>
-          <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 1.5 }}>
-            <Avatar
-              sx={{
-                width: 55,
-                height: 55,
-                background: "linear-gradient(135deg, #c41e3a 0%, #a31828 100%)",
-                fontSize: "1.4rem",
-                fontWeight: 900,
-              }}
-            >
-              {user && user.name ? user.name.charAt(0).toUpperCase() : "U"}
-            </Avatar>
-            <Box>
-              <Typography sx={{ fontWeight: 700, fontSize: "1.1rem", color: "#1a1a1a" }}>
-                {user && user.name ? user.name : "User"}
-              </Typography>
-              <Typography sx={{ fontSize: "0.8rem", color: "#666666" }}>
-                {user && user.email ? user.email : ""}
-              </Typography>
-            </Box>
-          </Stack>
-
-          {user && user.subscription ? (
-            <Chip
-              icon={<VerifiedIcon sx={{ fontSize: "0.9rem" }} />}
-              label={`${user.subscription.plan} Member`}
-              size="small"
-              sx={{ background: "#16a34a", color: "#ffffff", fontWeight: 700, fontSize: "0.7rem", height: "24px" }}
-            />
-          ) : (
-            <Chip label="Free User" size="small" sx={{ background: "#e8e8e8", color: "#666666", fontWeight: 600, fontSize: "0.7rem", height: "24px" }} />
-          )}
-
-          {user && user.subscription && user.subscription.categories && user.subscription.categories.length > 0 && (
-            <Box sx={{ mt: 1.5 }}>
-              <Typography sx={{ fontSize: "0.8rem", fontWeight: 700, color: "#666666", mb: 0.75 }}>
-                Your Subscriptions:
-              </Typography>
-              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                {user.subscription.categories.map((category, index) => (
-                  <Chip
-                    key={index}
-                    icon={<StarIcon sx={{ fontSize: "0.7rem" }} />}
-                    label={category}
-                    size="small"
-                    sx={{ background: "rgba(196, 30, 58, 0.1)", color: "#c41e3a", fontWeight: 600, fontSize: "0.65rem", height: "20px" }}
-                  />
-                ))}
+                  {trimmedCategory}
+                </Typography>
               </Box>
+              
+              {expiryDate && (
+                <Typography
+                  sx={{
+                    fontSize: "0.68rem",
+                    color: isExpired ? "#991b1b" : "#666666",
+                    fontWeight: 600,
+                  }}
+                >
+                  {isExpired 
+                    ? "Expired" 
+                    : new Date(expiryDate).toLocaleDateString('en-US', { 
+                        month: 'short', 
+                        day: 'numeric', 
+                        year: 'numeric' 
+                      })
+                  }
+                </Typography>
+              )}
             </Box>
-          )}
-        </Box>
+          );
+        })}
+      </Box>
+    </Box>
+  )}
 
-        {user && !user.subscription && (
-          <MenuItem onClick={handleUpgrade}>
-            <ListItemIcon>
-              <UpgradeIcon sx={{ color: "#c41e3a" }} />
-            </ListItemIcon>
-            <ListItemText primary="Upgrade to Premium" primaryTypographyProps={{ fontSize: "0.9rem", fontWeight: 700, color: "#c41e3a" }} />
-          </MenuItem>
-        )}
+  {/* Member Since - RED ACCENT */}
+  {user && user.createdAt && (
+    <Box sx={{ 
+      px: 2, 
+      py: 1.2, 
+      background: "rgba(220, 38, 38, 0.04)", 
+      borderBottom: "1px solid #f0f0f0" 
+    }}>
+      <Typography
+        sx={{
+          fontSize: "0.7rem",
+          color: "#c41e3a",
+          textAlign: "center",
+          fontWeight: 700,
+        }}
+      >
+        🎉 Member since {new Date(user.createdAt).toLocaleDateString('en-US', { 
+          month: 'long', 
+          day: 'numeric', 
+          year: 'numeric' 
+        })}
+      </Typography>
+    </Box>
+  )}
 
-        <Divider />
+  {/* Menu Actions */}
+  {user && !user.subscriptionType && (
+    <MenuItem 
+      onClick={handleUpgrade}
+      sx={{
+        py: 1.5,
+        background: "#ffffff",
+        "&:hover": { background: "rgba(220, 38, 38, 0.05)" },
+      }}
+    >
+      <ListItemIcon>
+        <UpgradeIcon sx={{ color: "#c41e3a" }} />
+      </ListItemIcon>
+      <ListItemText 
+        primary="Upgrade to Premium" 
+        primaryTypographyProps={{ 
+          fontSize: "0.9rem", 
+          fontWeight: 700, 
+          color: "#c41e3a" 
+        }} 
+      />
+    </MenuItem>
+  )}
 
-        <MenuItem onClick={handleLogout}>
-          <ListItemIcon>
-            <LogoutIcon sx={{ color: "#666666" }} />
-          </ListItemIcon>
-          <ListItemText primary="Sign Out" primaryTypographyProps={{ fontSize: "0.9rem", color: "#666666" }} />
-        </MenuItem>
-      </Menu>
+  <Divider sx={{ borderColor: "#f0f0f0" }} />
+
+  <MenuItem 
+    onClick={handleLogout}
+    sx={{
+      py: 1.5,
+      background: "#ffffff",
+      "&:hover": { background: "rgba(220, 38, 38, 0.05)" },
+    }}
+  >
+    <ListItemIcon>
+      <LogoutIcon sx={{ color: "#666666" }} />
+    </ListItemIcon>
+    <ListItemText 
+      primary="Sign Out" 
+      primaryTypographyProps={{ 
+        fontSize: "0.9rem", 
+        color: "#666666",
+        fontWeight: 600,
+      }} 
+    />
+  </MenuItem>
+</Menu>
+
 
       <Drawer
         anchor="left"

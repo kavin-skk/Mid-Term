@@ -15,8 +15,8 @@ const categories = [
   { id: "sports", name: "Sports", price: 99 },
   { id: "entertainment", name: "Entertainment", price: 99 },
   { id: "finance", name: "Finance", price: 99 },
-  { id: "defence", name: "Defence", price: 99 },
-  { id: "regional", name: "Regional", price: 99 },
+  { id: "defense", name: "Defence", price: 99 },
+  { id: "region", name: "Regional", price: 99 },
   { id: "mainpage", name: "Main Page", price: 99 },
 ];
 

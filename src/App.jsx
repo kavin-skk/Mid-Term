@@ -5,7 +5,6 @@ import Footer from "./components/Footer";
 import Typography from "@mui/material/Typography";
 import Navbar from "./components/Navbar";
 import SocialFeed from "./components/SocialFeed";
-import UserProfile from "./components/UserProfile";
 import BreakingNewsSection from "./components/BreakingNewsSection";
 import LatestHeadlines from "./components/LatestHeadlines";
 import SidebarAdBanner from "./components/SidebarAdBanner";
