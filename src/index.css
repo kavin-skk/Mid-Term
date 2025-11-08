@@ -1,3 +1,6 @@
+/* ============================================
+   TICKER BAR
+   ============================================ */
 .ticker-bar {
   position: relative;
   background: #e6750c;
@@ -5,7 +8,7 @@
   height: 36px;
   display: flex;
   align-items: center;
-  overflow: hidden; /* hides text outside area */
+  overflow: hidden;
   padding: 0 0.5rem;
   width: 100%;
   font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
@@ -39,7 +42,6 @@
   z-index: 1;
 }
 
-/* The smooth continuous movement */
 @keyframes ticker-move {
   0% {
     transform: translateX(100%);
@@ -49,19 +51,15 @@
   }
 }
 
-/* Keep your existing ticker-bar code above */
-
 /* ============================================
-   BACKGROUND FIX - PROFESSIONAL NEWSPAPER
+   LIGHT MODE (DEFAULT)
    ============================================ */
-
-/* Force white background everywhere */
 html,
 body,
 #root {
-  background: #ffffff !important;
-  margin: 0 !important;
-  padding: 0 !important;
+  background: #ffffff;
+  margin: 0;
+  padding: 0;
 }
 
 body {
@@ -69,19 +67,91 @@ body {
   color: #1a1a1a;
   overflow-x: hidden;
   line-height: 1.6;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Smooth scrolling */
-html {
-  scroll-behavior: smooth;
+/* ============================================
+   DARK MODE
+   ============================================ */
+html.dark-mode,
+html.dark-mode body,
+html.dark-mode #root {
+  background: #121212 !important;
+  color: #f5f5f5 !important;
 }
 
-/* Remove blue tap highlight on mobile */
-* {
-  -webkit-tap-highlight-color: transparent;
+/* Dark mode for all containers */
+html.dark-mode .MuiBox-root,
+html.dark-mode .MuiContainer-root,
+html.dark-mode .MuiPaper-root {
+  background-color: #1a1a1a;
+  color: #f5f5f5;
 }
 
-/* Custom scrollbar - Professional Red */
+/* Dark mode for cards */
+html.dark-mode .MuiCard-root {
+  background-color: #1e1e1e !important;
+  color: #f5f5f5 !important;
+  border: 1px solid #333333 !important;
+}
+
+/* Dark mode typography */
+html.dark-mode h1,
+html.dark-mode h2,
+html.dark-mode h3,
+html.dark-mode h4,
+html.dark-mode h5,
+html.dark-mode h6,
+html.dark-mode p,
+html.dark-mode span,
+html.dark-mode .MuiTypography-root {
+  color: #f5f5f5 !important;
+}
+
+/* Keep red accents visible in dark mode */
+html.dark-mode .red-accent,
+html.dark-mode .MuiButton-contained {
+  background-color: #c41e3a !important;
+  color: #ffffff !important;
+}
+
+/* Dark mode images - slightly dimmed */
+html.dark-mode img {
+  opacity: 0.9;
+  filter: brightness(0.9);
+}
+
+/* Dark mode links */
+html.dark-mode a {
+  color: #64b5f6;
+}
+
+html.dark-mode a:hover {
+  color: #90caf9;
+}
+
+/* Dark mode scrollbar */
+html.dark-mode ::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+html.dark-mode ::-webkit-scrollbar-track {
+  background: #1a1a1a;
+}
+
+html.dark-mode ::-webkit-scrollbar-thumb {
+  background: #404040;
+  border-radius: 5px;
+}
+
+html.dark-mode ::-webkit-scrollbar-thumb:hover {
+  background: #505050;
+}
+
+/* ============================================
+   LIGHT MODE SCROLLBAR
+   ============================================ */
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;
@@ -100,7 +170,18 @@ html {
   background: #991b1b;
 }
 
-/* Selection color - Red */
+/* ============================================
+   COMMON STYLES
+   ============================================ */
+html {
+  scroll-behavior: smooth;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Selection color - Red (both modes) */
 ::selection {
   background: #dc2626;
   color: #ffffff;
@@ -111,16 +192,9 @@ html {
   color: #ffffff;
 }
 
-/* Remove any unwanted backgrounds */
-.MuiBox-root {
-  background: transparent;
-}
-
 /* ============================================
-   PROFESSIONAL ANIMATIONS
+   ANIMATIONS
    ============================================ */
-
-/* Pulsing BREAKING dot animation */
 @keyframes pulse-dot {
   0%, 100% {
     opacity: 1;
@@ -136,7 +210,6 @@ html {
   animation: pulse-dot 1.5s ease-in-out infinite;
 }
 
-/* Gradient shimmer effect */
 @keyframes shimmer {
   0% {
     background-position: -1000px 0;
@@ -157,7 +230,6 @@ html {
   animation: shimmer 2s infinite;
 }
 
-/* Fade in animation */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -173,7 +245,6 @@ html {
   animation: fadeIn 0.6s ease-out;
 }
 
-/* Hover glow effect */
 .hover-glow {
   position: relative;
   transition: all 0.3s ease;
@@ -183,7 +254,6 @@ html {
   box-shadow: 0 8px 24px rgba(220, 38, 38, 0.15);
 }
 
-/* Trending fire animation */
 @keyframes fire {
   0%, 100% {
     transform: translateY(0) rotate(0deg);
@@ -200,7 +270,6 @@ html {
   animation: fire 1s ease-in-out infinite;
 }
 
-/* Fade-in Animation for Sections */
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -212,7 +281,6 @@ html {
   }
 }
 
-/* Apply to major sections */
 section,
 .fade-in,
 [class*="Section"],
@@ -220,19 +288,48 @@ section,
   animation: fadeInUp 0.6s ease-out;
 }
 
-/* Stagger animations */
 .fade-in:nth-child(1) { animation-delay: 0.1s; }
 .fade-in:nth-child(2) { animation-delay: 0.2s; }
 .fade-in:nth-child(3) { animation-delay: 0.3s; }
 .fade-in:nth-child(4) { animation-delay: 0.4s; }
 .fade-in:nth-child(5) { animation-delay: 0.5s; }
 
-/* Smooth transitions for all interactive elements */
+/* Smooth transitions */
 * {
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
-/* Prevent animation on page load for performance */
 .no-animation * {
   animation: none !important;
+}
+
+/* ============================================
+   DARK MODE DIVIDERS
+   ============================================ */
+html.dark-mode hr,
+html.dark-mode .MuiDivider-root {
+  border-color: #333333 !important;
+}
+
+/* ============================================
+   DARK MODE INPUT FIELDS
+   ============================================ */
+html.dark-mode input,
+html.dark-mode textarea,
+html.dark-mode select {
+  background-color: #262626 !important;
+  color: #f5f5f5 !important;
+  border-color: #404040 !important;
+}
+
+html.dark-mode input::placeholder,
+html.dark-mode textarea::placeholder {
+  color: #888888 !important;
+}
+
+/* ============================================
+   DARK MODE SHADOWS (SOFTER IN DARK MODE)
+   ============================================ */
+html.dark-mode .hover-glow:hover {
+  box-shadow: 0 8px 24px rgba(196, 30, 58, 0.3);
 }
