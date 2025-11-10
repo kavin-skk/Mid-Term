@@ -28,8 +28,10 @@ import TrendingVideos from "./components/TrendingVideos";
 import OpinionAnalysis from "./components/MustReadToday";
 import QuickRead from "./components/QuickRead";
 import PhotoStories from "./components/PhotoStories";
+import CategoryPage from "./pages/CategoryPage";
+import ArticlePage from "./components/Article/ArticlePage"; // ← ADD THIS IMPORT
 
-
+// HOME PAGE CONTENT (without Navbar/Footer)
 function MainPageContent() {
   return (
     <div
@@ -39,19 +41,14 @@ function MainPageContent() {
         overflowX: "hidden",
       }}
     >
-      {/* 1. NAVBAR - Fixed at top */}
-      <Navbar />
-
       {/* 2. LIVE TICKER - Scrolls with page */}
       <LiveTicker />
 
       {/* 3. ADVERTISEMENT PLACEHOLDER - Space for backend */}
       <div style={{ marginTop: 170 }}>
         {/* 🔸 Full-width Top Ad Banner - Professional Style */}
-{/* Advertisement */}
-<AdBanner />
+        <AdBanner />
 
-        {/* 🔹 MAIN 3-COLUMN LAYOUT: 18% | 64% | 18% */}
         {/* 🔹 MAIN 3-COLUMN LAYOUT: 18% | 64% | 18% */}
         <main
           style={{
@@ -89,7 +86,6 @@ function MainPageContent() {
               <TrendingVideos />
               <LeftColumnAd />
               <PopularTags />
-
             </div>
 
             {/* 🔹 CENTER COLUMN - Exactly 64% */}
@@ -99,14 +95,13 @@ function MainPageContent() {
                 flex: "1",
                 display: "flex",
                 flexDirection: "column",
-
               }}
             >
               <BreakingNewsSection />
-              
               <FactOfTheDay />
             </div>
-<Box sx={{ height: "40px" }} />
+            <Box sx={{ height: "40px" }} />
+
             {/* 🔸 RIGHT COLUMN - Exactly 18% */}
             <div
               style={{
@@ -143,7 +138,8 @@ function MainPageContent() {
         >
           <ExploreMore />
         </Box>
-<Box sx={{ height: "40px" }} />
+        <Box sx={{ height: "40px" }} />
+
         {/* Editors Picks Section */}
         <Box
           sx={{
@@ -169,8 +165,8 @@ function MainPageContent() {
         >
           <StateUpdates />
         </Box>
-          
-        {/* Footer */}
+
+        {/* Footer Copyright */}
         <Box
           sx={{
             height: "60px",
@@ -194,9 +190,7 @@ function MainPageContent() {
           >
             © 2025 MID News. All Rights Reserved.
           </Typography>
-         
         </Box>
-         <Footer />
       </div>
     </div>
   );
@@ -205,14 +199,27 @@ function MainPageContent() {
 export default function App() {
   return (
     <Router>
+      {/* ✅ NAVBAR - Shows on ALL pages */}
+      <Navbar />
+      
       <Routes>
         {/* Home/news page */}
         <Route path="/" element={<MainPageContent />} />
+        
+        {/* Category pages - Single route handles all categories */}
+        <Route path="/category/:category" element={<CategoryPage />} />
+        
+        {/* ✅ NEWS DETAIL PAGE - ADD THIS ROUTE */}
+        <Route path="/news/:newsId" element={<ArticlePage />} />
+        
         {/* Subscription pages */}
         <Route path="/plans" element={<SubscriptionPlans />} />
         <Route path="/subscribe" element={<SubscriptionForm />} />
         <Route path="/signin" element={<GoogleSignIn />} />
       </Routes>
+      
+      {/* ✅ FOOTER - Shows on ALL pages */}
+      <Footer />
     </Router>
   );
 }

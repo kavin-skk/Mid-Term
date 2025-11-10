@@ -1,8 +1,27 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Footer() {
+  const navigate = useNavigate();
+
+  const sections = [
+    { name: "Home", path: "/" },
+    { name: "Politics", path: "/category/politics" },
+    { name: "Defense", path: "/category/defense" },
+    { name: "Finance", path: "/category/finance" },
+    { name: "Entertainment", path: "/category/entertainment" },
+    { name: "Sports", path: "/category/sports" },
+  ];
+
+  const companyLinks = [
+    { name: "About Us", path: "/about" },
+    { name: "Contact", path: "/contact" },
+    { name: "Careers", path: "/careers" },
+    { name: "Advertise", path: "/advertise" },
+    { name: "Privacy Policy", path: "/privacy" },
+  ];
+
   return (
     <Box
       component="footer"
@@ -43,7 +62,9 @@ export default function Footer() {
               letterSpacing: "3px",
               display: "flex",
               gap: "4px",
+              cursor: "pointer",
             }}
+            onClick={() => navigate("/")}
           >
             <Box component="span" sx={{ color: "#c41e3a" }}>M</Box>
             <Box component="span" sx={{ color: "#c41e3a" }}>I</Box>
@@ -93,7 +114,7 @@ export default function Footer() {
           </Box>
         </Box>
 
-        {/* Sections */}
+        {/* Sections - Updated with correct categories */}
         <Box>
           <Typography
             sx={{
@@ -108,11 +129,11 @@ export default function Footer() {
           >
             Sections
           </Typography>
-          {["Home", "World", "Politics", "Economy", "Sports"].map((item) => (
+          {sections.map((item) => (
             <Typography
-              key={item}
+              key={item.name}
               component={Link}
-              to={`/${item.toLowerCase()}`}
+              to={item.path}
               sx={{
                 display: "block",
                 fontSize: "0.8rem",
@@ -126,7 +147,7 @@ export default function Footer() {
                 },
               }}
             >
-              {item}
+              {item.name}
             </Typography>
           ))}
         </Box>
@@ -146,14 +167,17 @@ export default function Footer() {
           >
             Company
           </Typography>
-          {["About Us", "Contact", "Careers", "Advertise", "Privacy Policy"].map((item) => (
+          {companyLinks.map((item) => (
             <Typography
-              key={item}
+              key={item.name}
+              component={Link}
+              to={item.path}
               sx={{
                 display: "block",
                 fontSize: "0.8rem",
                 color: "#b0b0b0",
                 mb: 1,
+                textDecoration: "none",
                 cursor: "pointer",
                 transition: "all 0.2s ease",
                 "&:hover": {
@@ -162,7 +186,7 @@ export default function Footer() {
                 },
               }}
             >
-              {item}
+              {item.name}
             </Typography>
           ))}
         </Box>
@@ -194,6 +218,10 @@ export default function Footer() {
           </Typography>
           <Box
             component="form"
+            onSubmit={(e) => {
+              e.preventDefault();
+              alert("Thank you for subscribing!");
+            }}
             sx={{
               display: "flex",
               gap: 0.5,
@@ -202,6 +230,7 @@ export default function Footer() {
             <input
               type="email"
               placeholder="Enter your email"
+              required
               style={{
                 flex: 1,
                 padding: "8px 10px",
@@ -269,9 +298,12 @@ export default function Footer() {
             {["Terms", "Privacy", "Cookies"].map((item) => (
               <Typography
                 key={item}
+                component={Link}
+                to={`/${item.toLowerCase()}`}
                 sx={{
                   fontSize: "0.75rem",
                   color: "#888888",
+                  textDecoration: "none",
                   cursor: "pointer",
                   transition: "color 0.2s ease",
                   "&:hover": {

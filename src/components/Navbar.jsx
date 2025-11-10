@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
@@ -33,6 +33,7 @@ export default function Navbar() {
   const [user, setUser] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
   const navigate = useNavigate();
+  const currentLocation = useLocation();
   const open = Boolean(anchorEl);
   const [regionalAnchorEl, setRegionalAnchorEl] = useState(null);
   const regionalOpen = Boolean(regionalAnchorEl);
@@ -137,6 +138,26 @@ export default function Navbar() {
     handleLanguageClose();
   };
 
+  const isActiveLink = (link) => {
+    const path = currentLocation.pathname.toLowerCase();
+    
+    if (link === 'Home') {
+      return path === '/';
+    }
+    
+    if (link === 'Region') {
+      return path.includes('/region');
+    }
+    
+    // For category pages
+    const categoryPages = ['Politics', 'Defense', 'Finance', 'Entertainment', 'Sports'];
+    if (categoryPages.includes(link)) {
+      return path === `/category/${link.toLowerCase()}`;
+    }
+    
+    return false;
+  };
+
   const menuItems = [
     "Home",
     "Region",
@@ -238,7 +259,6 @@ export default function Navbar() {
           {/* RIGHT: Language + Dark Mode + Subscribe + Sign In/Profile */}
           <Stack direction="row" spacing={1} alignItems="center">
             {/* Language Selector */}
-{/* Language Selector */}
 <Tooltip title={`Language: ${language}`}>
   <IconButton
     onClick={handleLanguageClick}
@@ -277,9 +297,6 @@ export default function Navbar() {
     )}
   </IconButton>
 </Tooltip>
-
-
-            {/* Dark Mode Toggle */}
 
             <Button
               variant="contained"
@@ -377,15 +394,41 @@ export default function Navbar() {
                          .map(cat => cat.trim().toLowerCase())
                          .includes(link.toLowerCase());
 
+  const isActive = isActiveLink(link);
+
+  const handleMenuClick = () => {
+    console.log("Clicked:", link);
+    
+    if (link === "Region") {
+      handleRegionalClick();
+      return;
+    }
+    
+    const categoryPages = ['Politics', 'Defense', 'Finance', 'Entertainment', 'Sports'];
+    if (categoryPages.includes(link)) {
+      navigate(`/category/${link.toLowerCase()}`);
+      return;
+    }
+    
+    if (link === 'Home') {
+      navigate('/');
+      return;
+    }
+    
+    console.log("No action defined for:", link);
+  };
+
   return (
     <Button
       key={link}
-      onClick={link === "Region" ? handleRegionalClick : undefined}
+      onClick={handleMenuClick}
       sx={{
-        color: isSubscribed 
-          ? "#c41e3a" 
-          : (darkMode ? "#d1d1d1" : "#4a4a4a"),
-        fontWeight: isSubscribed ? 700 : 600,
+        color: isActive 
+          ? "#ffffff"
+          : (isSubscribed 
+              ? "#c41e3a" 
+              : (darkMode ? "#d1d1d1" : "#4a4a4a")),
+        fontWeight: isActive ? 800 : (isSubscribed ? 700 : 600),
         fontSize: "0.875rem",
         textTransform: "none",
         fontFamily: "'Segoe UI', sans-serif",
@@ -397,16 +440,27 @@ export default function Navbar() {
           ? (darkMode ? "1px solid #333333" : "1px solid #f0f0f0") 
           : "none",
         position: "relative",
-        background: isSubscribed 
-          ? "rgba(22, 163, 74, 0.05)" 
-          : (link === "Region" && regionalOpen 
-              ? "rgba(196, 30, 58, 0.08)" 
-              : "transparent"),
+        background: isActive 
+          ? "#c41e3a"
+          : (isSubscribed 
+              ? "rgba(22, 163, 74, 0.05)" 
+              : (link === "Region" && regionalOpen 
+                  ? "rgba(196, 30, 58, 0.08)" 
+                  : "transparent")),
         "&:hover": {
           backgroundColor: "#c41e3a",
           color: "#ffffff",
           borderRight: index < menuItems.length - 1 ? "1px solid #c41e3a" : "none",
         },
+        "&::after": isActive ? {
+          content: '""',
+          position: "absolute",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          height: "3px",
+          backgroundColor: "#ffffff",
+        } : {},
         transition: "all 0.2s",
         display: "flex",
         alignItems: "center",
